@@ -1,0 +1,17 @@
+title: 'Bla Bli Blog'
+languageCode: 'en-us'
+params:
+  description: 'Description.'
+  author: 'Author.'
+menu:
+  main:
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 1
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 2
+permalinks:
+  posts: 'post/:year/:month/:day/:slug/'
