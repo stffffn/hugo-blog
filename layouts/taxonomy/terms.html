@@ -1,12 +1,14 @@
 {{ define "main" }}
 <main>
-  <h1>{{ .Title }}</h1>
+  <h2>{{ .Title }}</h2>
+  {{ if .Data.Terms}}
   <ul>
     {{ range .Data.Terms.Alphabetical }}
     <li>
-      <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+      <a href="{{ .Page.Permalink }}">#{{ lower .Page.Title | urlize }}</a>
     </li>
     {{ end }}
   </ul>
+  {{ end }}
 </main>
 {{ end }}

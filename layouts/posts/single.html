@@ -1,14 +1,9 @@
 {{ define "main" }}
 <main>
   <article>
-    <h1>{{ .Title }}</h1>
-    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
-    <span>
-      {{ range .Params.tags }}
-      <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
-      {{ end }}
-    </span>
-    <p>{{ .Content }}</p>
+    <h2>{{ .Title }}</h2>
+    {{ partial "post_data" .}}
+    <p>{{ .Content}}</p>
   </article>
 </main>
 {{ end }}

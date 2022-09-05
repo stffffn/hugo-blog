@@ -15,3 +15,6 @@ menu:
       weight: 2
 permalinks:
   posts: 'post/:year/:month/:day/:slug/'
+markup:
+  highlight:
+    style: 'dracula'
