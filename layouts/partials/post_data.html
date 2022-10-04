@@ -1,10 +1,10 @@
+<div class="post-data">
 {{ if .Date}}
 <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
 {{ end }}
 {{ if .Params.tags}}
 <div>
-  {{ range sort .Params.tags }}
-  <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ lower . | urlize}}</a>
-  {{ end }}
+  {{ range sort .Params.tags }}<a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ lower . | urlize}}</a>{{ end }}
 </div>
 {{ end }}
+</div>

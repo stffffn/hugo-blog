@@ -1,7 +1,10 @@
 {{ define "main" }}
 <main>
   {{range (where .Site.RegularPages "Type" "in" .Site.Params.mainSections)}}
-  <h2><a href="{{.Permalink}}">{{.Title}}</a></h2>
-  {{ partial "post_data" .}} {{end}}
+  <div class="post-entry">
+    <h2><a href="{{.Permalink}}">{{.Title}}</a></h2>
+    {{ partial "post_data" .}}
+  </div>
+  {{end}}
 </main>
 {{ end }}
