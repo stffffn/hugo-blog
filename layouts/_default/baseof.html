@@ -7,8 +7,11 @@
     <title>{{ .Title }}{{ if ne .Title .Site.Title }} / {{.Site.Title}}{{ end }}</title>
     {{ with .Site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
     {{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
-    {{ $style := resources.Get "scss/style.scss" | resources.ToCSS }}
-    <link rel="stylesheet" href="{{$style.Permalink}}">
+    {{ $styles := resources.Get "scss/styles.scss" | resources.ToCSS }}
+    <link rel="stylesheet" href="{{$styles.Permalink}}">
+    <link href="{{"fontawesome/css/fontawesome.min.css" | relURL}}" rel="stylesheet">
+    <link href="{{"fontawesome/css/brands.min.css" | relURL}}" rel="stylesheet">
+    <link href="{{"fontawesome/css/solid.min.css" | relURL}}" rel="stylesheet">
   </head>
   <body>
     {{ partial "header" . }}
