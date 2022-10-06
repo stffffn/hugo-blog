@@ -2,7 +2,7 @@ title: 'Bla Bli Blog'
 languageCode: 'en-us'
 params:
   description: 'Description.'
-  author: 'Author.'
+  author: 'stffffn'
 menu:
   main:
     - identifier: tags
@@ -10,8 +10,26 @@ menu:
       url: /tags/
       weight: 1
       pre: <i class="fa-solid fa-hashtag"></i>
+    - identifier: rss
+      name: RSS
+      url: /index.xml
+      weight: 2
+      pre: <i class="fa-solid fa-square-rss"></i>
+  social:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/stffffn
+      pre: <i class="fa-brands fa-github"></i>
+    - identifier: instagram
+      name: Instagram
+      url: https://instagram.com/stffffn/
+      pre: <i class="fa-brands fa-instagram"></i>
+    - identifier: twitter
+      name: Twitter
+      url: https://twitter.com/stffffn/
+      pre: <i class="fa-brands fa-twitter"></i>
 permalinks:
   posts: 'post/:year/:month/:day/:slug/'
 markup:
   highlight:
-    style: 'dracula'
+    style: 'native'
