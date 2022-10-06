@@ -1,11 +1,16 @@
 {{ define "main" }}
 <main>
-  <h2>{{ .Title }}</h2>
   {{ if .Data.Terms}}
   <ul>
-    {{ range .Data.Terms.Alphabetical }}
+    {{ range .Data.Terms.Alphabetical }} {{ $tagName := lower .Page.Title |
+    urlize }}
     <li>
-      <a href="{{ .Page.Permalink }}">#{{ lower .Page.Title | urlize }}</a>
+      <a
+        aria-label="#{{$tagName}}"
+        title="#{{$tagName}}"
+        href="{{ .Page.Permalink }}"
+        >#{{$tagName}}</a
+      >
     </li>
     {{ end }}
   </ul>

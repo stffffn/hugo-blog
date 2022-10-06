@@ -2,6 +2,7 @@
 title: 'Markdown Things'
 slug: 'markdown-things'
 date: 2022-09-05
+summary: 'This is a custom summary'
 tags:
   - Markdown
   - Technology

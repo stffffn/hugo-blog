@@ -3,8 +3,11 @@
 <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
 {{ end }}
 {{ if .Params.tags}}
-<div>
-  {{ range sort .Params.tags }}<a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ lower . | urlize}}</a>{{ end }}
+<div class="post-tags">
+  {{ range sort .Params.tags }}
+  {{ $tagName := lower . | urlize }}
+  <a aria-label="#{{$tagName}}" title="#{{$tagName}}" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{$tagName}}</a>
+  {{ end }}
 </div>
 {{ end }}
 </div>
