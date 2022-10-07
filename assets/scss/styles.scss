@@ -17,7 +17,7 @@ body {
   padding: 0 1rem;
   margin: 0 auto;
   color: $primary;
-  background: $background;
+  background-color: $background;
   line-height: 1.5;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
@@ -48,9 +48,9 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: $secondary;
-  font-size: 0.875rem;
   padding-bottom: 1rem;
+  font-size: 0.875rem;
+  color: $secondary;
 
   > a {
     display: flex;
@@ -67,7 +67,7 @@ a {
   text-decoration: none;
   transition: ease-in-out;
   transition-duration: 0.2s;
-  transition-property: color;
+  transition-property: color, background-color;
 
   &:hover {
     color: $highlight;
@@ -81,6 +81,28 @@ i {
 .tag {
   &-headline {
     margin-top: 0;
+  }
+
+  &-overview {
+    display: flex;
+    flex-wrap: wrap;
+
+    a {
+      padding: 0.25rem 0.5rem;
+      margin: 0.25rem 0.5rem 0.25rem 0;
+      border-radius: 10rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $background;
+      background-color: $lightBackground;
+
+      &:hover {
+        background-color: $highlight;
+      }
+    }
   }
 }
 
@@ -134,9 +156,9 @@ i {
 
     blockquote {
       margin: 1rem 0;
+      padding: 0.625rem;
       border: 0 solid $highlight;
       border-left-width: 0.25rem;
-      padding: 0.625rem;
       background-color: $accentBackground;
 
       * {
@@ -181,11 +203,11 @@ i {
 
     p {
       code {
+        padding: 0.2rem;
+        border-radius: $borderRadius;
+        font-weight: bold;
         color: $background;
         background-color: $lightBackground;
-        border-radius: $borderRadius;
-        padding: 0.2rem;
-        font-weight: bold;
       }
     }
   }
