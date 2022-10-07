@@ -17,7 +17,9 @@ jobs:
       - name: Build
         run: hugo --minify
       - name: Add .nojekyll
-        run: touch ./public/.nojekyll
+        run: touch .nojekyll
+      - name: Add CNAME
+        run: echo blabli.blog >> CNAME
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:

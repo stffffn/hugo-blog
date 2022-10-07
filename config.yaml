@@ -1,6 +1,6 @@
 title: 'Bla Bli Blog'
 languageCode: 'en-us'
-baseURL: https://stffffn.github.io/hugo-blog
+baseURL: https://blabli.blog
 canonifyURLs: true
 disableKinds: 'section'
 params:
