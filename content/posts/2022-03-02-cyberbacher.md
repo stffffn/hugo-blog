@@ -30,6 +30,6 @@ If you printed your own or received some from me, feel free to send me pictures.
 
 Cyberbacher, as seen on ~~TV~~ Twitch:
 
-{{< figure src="/images/cyberbacher/jvpeek.jpg" caption="Source: [JvPeek](https://www.twitch.tv/jvpeek)">}}
+{{< figure src="/images/cyberbacher/jvpeek.jpg" alt="Screenshot of JvPeek's Twitch stream" caption="Source: [JvPeek](https://www.twitch.tv/jvpeek)">}}
 
-{{< figure src="/images/cyberbacher/chrisfigge.jpg" caption="Source: [Chris Figge](https://www.twitch.tv/chrisfigge)">}}
+{{< figure src="/images/cyberbacher/chrisfigge.jpg" alt="Screenshot of Chris Figge's Twitch stream" caption="Source: [Chris Figge](https://www.twitch.tv/chrisfigge)">}}

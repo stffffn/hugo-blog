@@ -1,7 +1,7 @@
 {{ define "main" }}
 <main>
   <h2 class="tag-headline">
-    <a href="/tags/">&larr; Tags</a> / #{{ .Title | urlize }}
+    <a href="{{ "tags/" | relURL }}">&larr; Tags</a> / #{{ .Title | urlize }}
   </h2>
   {{range .Data.Pages}}
   <div class="post-entry post-info">

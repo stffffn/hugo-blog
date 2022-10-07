@@ -1,6 +1,6 @@
 {{ define "main" }}
 <main>
-  {{range (where .Site.RegularPages "Type" "in" .Site.Params.mainSections)}}
+  {{ range .Site.RegularPages }}
   <div class="post-entry post-info">
     <h2>
       <a aria-label="{{.Title}}" title="{{.Title}}" href="{{.Permalink}}">

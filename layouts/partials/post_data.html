@@ -6,7 +6,7 @@
 <div class="post-tags">
   {{ range sort .Params.tags }}
   {{ $tagName := lower . | urlize }}
-  <a aria-label="#{{$tagName}}" title="#{{$tagName}}" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{$tagName}}</a>
+  <a aria-label="#{{$tagName}}" title="#{{$tagName}}" href="{{ "tags/" | relURL }}{{ . | urlize }}">#{{$tagName}}</a>
   {{ end }}
 </div>
 {{ end }}

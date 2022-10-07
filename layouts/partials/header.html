@@ -1,5 +1,7 @@
 <header>
-  <a aria-label="Home" title="{{.Site.Title}}" href="/">{{ .Site.Title }}</a>
+  <a aria-label="Home" title="{{.Site.Title}}" href="{{.Site.BaseURL}}"
+    >{{ .Site.Title }}</a
+  >
   <nav>
     {{ with .Site.Menus.main }}{{ range . }}<a
       class="menu-item"
