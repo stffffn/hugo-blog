@@ -16,3 +16,5 @@ Like a month ago, I changed my mind and wanted to give [Hugo](https://gohugo.io/
 I basically ported my old blog to Hugo with some minor adjustments in styling and the decision of not using any JavaScript or other external, not-self-hosted dependencies. Therefore the old switch to toggle between light and dark mode is gone.
 
 This is only the third post and I already switched the software but didn't deliver much content in the meantime...
+
+The new source code can be found on [GitHub](https://github.com/stffffn/hugo-blog).
