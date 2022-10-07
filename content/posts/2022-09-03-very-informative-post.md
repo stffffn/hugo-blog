@@ -9,4 +9,4 @@ tags:
 
 ![Very happy cat](https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg)
 
-{{< figure src="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg" title="This cat is obviously very happy." >}}
+{{< figure src="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg" caption="This cat is obviously very happy. [Link](www.google.com)" >}}

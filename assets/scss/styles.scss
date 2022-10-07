@@ -1,8 +1,13 @@
+// COLORS
 $background: #171717;
 $lightBackground: #d4d4d4;
+$accentBackground: #202020;
 $primary: #ffffff;
 $secondary: #a2a2a2;
 $highlight: #ed9d13;
+
+// SIZES
+$borderRadius: 0.375rem;
 
 body {
   display: flex;
@@ -73,6 +78,12 @@ i {
   font-size: 1.125rem;
 }
 
+.tag {
+  &-headline {
+    margin-top: 0;
+  }
+}
+
 .post {
   &-info {
     h2 {
@@ -113,13 +124,58 @@ i {
       }
     }
 
+    hr {
+      border-color: 1px solid $secondary;
+    }
+
     img {
       max-width: 100%;
     }
 
+    blockquote {
+      margin: 1rem 0;
+      border: 0 solid $highlight;
+      border-left-width: 0.25rem;
+      padding: 0.625rem;
+      background-color: $accentBackground;
+
+      * {
+        margin: 0;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 0.5rem;
+      }
+
+      thead,
+      tr:nth-child(2) {
+        background-color: $accentBackground;
+      }
+    }
+
+    figure {
+      margin: 1rem 0;
+
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: $secondary;
+      }
+    }
+
     pre {
       padding: 1rem;
-      border-radius: 0.375rem;
+      border-radius: $borderRadius;
       overflow-y: scroll;
     }
 
@@ -127,7 +183,7 @@ i {
       code {
         color: $background;
         background-color: $lightBackground;
-        border-radius: 0.375rem;
+        border-radius: $borderRadius;
         padding: 0.2rem;
         font-weight: bold;
       }
