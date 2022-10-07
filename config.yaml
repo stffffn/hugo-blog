@@ -1,5 +1,8 @@
 title: 'Bla Bli Blog'
 languageCode: 'en-us'
+baseURL: https://stffffn.github.io/hugo-blog
+canonifyURLs: true
+disableKinds: 'section'
 params:
   description: 'The personal blog of stffffn'
   author: 'stffffn'
