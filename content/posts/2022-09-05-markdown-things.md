@@ -52,7 +52,9 @@ Little more text below the other sentence containing a link.
 
 ![Very happy cat](https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg)
 
-{{< figure src="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg" caption="This cat is obviously very happy. [Link](www.google.com)" >}}
+{{< figure src="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg" caption="This cat is obviously very happy. [Link](https://www.google.com 'Test 123')">}}
+
+[interner link](/tags/technology)
 
 This is a sentence with a `Inline Code Test` lorem ipsum dolor.  
 Another line of words just for testing.
