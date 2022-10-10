@@ -203,14 +203,12 @@ i {
       overflow-y: scroll;
     }
 
-    p {
-      code {
-        padding: 0.2rem;
-        border-radius: $borderRadius;
-        font-weight: bold;
-        color: $background;
-        background-color: $lightBackground;
-      }
+    :not(pre) > code {
+      padding: 0.2rem;
+      border-radius: $borderRadius;
+      font-weight: bold;
+      color: $background;
+      background-color: $lightBackground;
     }
   }
 }
