@@ -31,6 +31,10 @@ menu:
       name: Instagram
       url: https://instagram.com/stffffn/
       pre: <i class="fa-brands fa-instagram"></i>
+    - identifier: mastodon
+      name: Mastodon
+      url: https://mastodon.social/@stffffn
+      pre: <i class="fa-brands fa-mastodon"></i>
     - identifier: twitter
       name: Twitter
       url: https://twitter.com/stffffn/
