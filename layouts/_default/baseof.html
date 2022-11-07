@@ -11,6 +11,9 @@
     {{ template "_internal/opengraph.html" . }}
     {{ template "_internal/twitter_cards.html" . }}
 
+    <!-- MASTODON -->
+    <link rel="me" href="https://mastodon.social/@stffffn">
+
     <!-- TITLE -->    
     {{ $siteTitle := .Title }}
     {{ if and (in .Permalink "/tags/") (not (in .Title "Tags")) }}

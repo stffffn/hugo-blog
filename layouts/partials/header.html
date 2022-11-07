@@ -12,7 +12,7 @@
     >{{ end }}{{ end }}{{ with .Site.Menus.social }}{{ range . }}<a
       class="menu-item"
       target="_blank"
-      rel="noopener noreferrer {{if eq .Name "Mastodon"}}me{{end}}"
+      rel="noopener noreferrer"
       aria-label="{{.Name}}"
       title="{{.Name}}"
       href="{{ .URL }}"
