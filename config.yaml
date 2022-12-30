@@ -1,15 +1,13 @@
-title: 'Bla Bli Blog'
-languageCode: 'en-us'
+title: "Bla Bli Blog"
+languageCode: "en-us"
 baseURL: https://blabli.blog
 canonifyURLs: true
-disableKinds: 'section'
+disableKinds: "section"
 params:
-  description: 'The personal blog of stffffn'
-  author: 'stffffn'
+  description: "The personal blog of stffffn"
+  author: "stffffn"
   images:
     - default-feature-image.png
-social:
-  twitter: stffffn
 menu:
   main:
     - identifier: tags
@@ -35,12 +33,8 @@ menu:
       name: Mastodon
       url: https://mastodon.social/@stffffn
       pre: <i class="fa-brands fa-mastodon"></i>
-    - identifier: twitter
-      name: Twitter
-      url: https://twitter.com/stffffn/
-      pre: <i class="fa-brands fa-twitter"></i>
 permalinks:
-  posts: 'post/:year/:month/:day/:slug/'
+  posts: "post/:year/:month/:day/:slug/"
 markup:
   highlight:
-    style: 'native'
+    style: "native"
