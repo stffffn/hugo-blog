@@ -98,7 +98,8 @@ i {
   border-color: 1px solid #a2a2a2; }
 
 .post-content img {
-  max-width: 100%; }
+  max-width: 100%;
+  height: auto; }
 
 .post-content blockquote {
   margin: 1rem 0;
