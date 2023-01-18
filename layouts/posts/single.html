@@ -1,11 +1,11 @@
 {{ define "main" }}
-<main>
-  <article>
-    <div class="post-info">
-      <h2>{{ .Title }}</h2>
-      {{ partial "post_data" .}}
-    </div>
-    <div class="post-content">{{ .Content}}</div>
-  </article>
-</main>
+  <main>
+    <article>
+      <div class="post-info">
+        <h2>{{ .Title }}</h2>
+        {{ partial "post_data" . }}
+      </div>
+      <div class="post-content">{{ .Content }}</div>
+    </article>
+  </main>
 {{ end }}

@@ -1,14 +1,17 @@
 {{ define "main" }}
-<main>
-  {{ range .Site.RegularPages }}
-  <div class="post-entry post-info">
-    <h2>
-      <a aria-label="{{.Title}}" title="{{.Title}}" href="{{.Permalink}}">
-        {{.Title}}
-      </a>
-    </h2>
-    {{ partial "post_data" .}}
-  </div>
-  {{end}}
-</main>
+  <main>
+    {{ range .Site.RegularPages }}
+      <div class="post-entry post-info">
+        <h2>
+          <a
+            aria-label="{{ .Title }}"
+            title="{{ .Title }}"
+            href="{{ .Permalink }}">
+            {{ .Title }}
+          </a>
+        </h2>
+        {{ partial "post_data" . }}
+      </div>
+    {{ end }}
+  </main>
 {{ end }}

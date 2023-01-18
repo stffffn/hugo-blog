@@ -1,15 +1,15 @@
 ---
-title: 'First Post'
-slug: 'first-post'
+title: "First Post"
+slug: "first-post"
 date: 2022-02-21
-summary: 'The very first post of my new blog.'
+summary: "The very first post of my new blog."
 tags:
   - blog
   - development
   - meta
 ---
 
-This is an outdated post of my first blog. An update can be found here: [Same same but different](/post/2022/10/07/same-same-but-different/ 'Same same but different')
+This is an outdated post of my first blog. An update can be found here: [Same same but different](/post/2022/10/07/same-same-but-different/ "Same same but different")
 
 ~~New blog and therefore the obligatory "first post" post.~~
 
@@ -19,4 +19,4 @@ This is an outdated post of my first blog. An update can be found here: [Same sa
 
 ~~That's why I cobbled together this thingy here and also finally took a look at Nextjs and Tailwind. This blog uses markdown files for its posts, all pages are statically generated and everything is built and published to GitHub pages through GitHub actions.~~
 
-~~You can find the source code on [GitHub](https://github.com/stffffn/nextjs-blog 'nextjs-blog').~~
+~~You can find the source code on [GitHub](https://github.com/stffffn/nextjs-blog "nextjs-blog").~~

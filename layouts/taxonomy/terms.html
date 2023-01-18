@@ -1,15 +1,19 @@
 {{ define "main" }}
-<main>
-  <div class="tag-overview">
-    {{ if .Data.Terms}} {{ range .Data.Terms.Alphabetical }} {{ $tagName :=
-    lower .Page.Title | urlize }}
-    <a
-      aria-label="#{{$tagName}}"
-      title="#{{$tagName}}"
-      href="{{ .Page.Permalink }}"
-      >#{{$tagName}}</a
-    >
-    {{ end }} {{ end }}
-  </div>
-</main>
+  <main>
+    <div class="tag-overview">
+      {{ if .Data.Terms }}
+        {{ range .Data.Terms.Alphabetical }}
+          {{ $tagName :=
+            lower .Page.Title | urlize
+          }}
+          <a
+            aria-label="#{{ $tagName }}"
+            title="#{{ $tagName }}"
+            href="{{ .Page.Permalink }}"
+            >#{{ $tagName }}</a
+          >
+        {{ end }}
+      {{ end }}
+    </div>
+  </main>
 {{ end }}

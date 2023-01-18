@@ -1,13 +1,20 @@
 <div class="post-data">
-{{ if .Date}}
-<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
-{{ end }}
-{{ if .Params.tags}}
-<div class="post-tags">
-  {{ range sort .Params.tags }}
-  {{ $tagName := lower . | urlize }}
-  <a aria-label="#{{$tagName}}" title="#{{$tagName}}" href="{{ "tags/" | relURL }}{{ . | urlize }}">#{{$tagName}}</a>
+  {{ if .Date }}
+    <time datetime="{{ .Date.Format "2006-01-02" }}"
+      >{{ .Date.Format "January 2, 2006" }}</time
+    >
   {{ end }}
-</div>
-{{ end }}
+  {{ if .Params.tags }}
+    <div class="post-tags">
+      {{ range sort .Params.tags }}
+        {{ $tagName := lower . | urlize }}
+        <a
+          aria-label="#{{ $tagName }}"
+          title="#{{ $tagName }}"
+          href="{{ "tags/" | relURL }}{{ . | urlize }}"
+          >#{{ $tagName }}</a
+        >
+      {{ end }}
+    </div>
+  {{ end }}
 </div>

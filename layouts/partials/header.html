@@ -1,22 +1,30 @@
 <header>
-  <a aria-label="Home" title="{{.Site.Title}}" href="{{.Site.BaseURL}}"
+  <a aria-label="Home" title="{{ .Site.Title }}" href="{{ .Site.BaseURL }}"
     >{{ .Site.Title }}</a
   >
   <nav>
-    {{ with .Site.Menus.main }}{{ range . }}<a
-      class="menu-item"
-      aria-label="{{.Name}}"
-      title="{{.Name}}"
-      href="{{ .URL }}"
-      >{{.Pre}}</a
-    >{{ end }}{{ end }}{{ with .Site.Menus.social }}{{ range . }}<a
-      class="menu-item"
-      target="_blank"
-      rel="noopener noreferrer{{if eq .Name "Mastodon"}} me{{end}}"
-      aria-label="{{.Name}}"
-      title="{{.Name}}"
-      href="{{ .URL }}"
-      >{{.Pre}}</a
-    >{{ end }} {{ end }}
+    {{ with .Site.Menus.main }}
+      {{ range . }}
+        <a
+          class="menu-item"
+          aria-label="{{ .Name }}"
+          title="{{ .Name }}"
+          href="{{ .URL }}"
+          >{{ .Pre }}</a
+        >
+      {{ end }}
+    {{ end }}{{ with .Site.Menus.social }}
+      {{ range . }}
+        <a
+          class="menu-item"
+          target="_blank"
+          rel="noopener noreferrer{{ if eq .Name "Mastodon" }}me{{ end }}"
+          aria-label="{{ .Name }}"
+          title="{{ .Name }}"
+          href="{{ .URL }}"
+          >{{ .Pre }}</a
+        >
+      {{ end }}
+    {{ end }}
   </nav>
 </header>
