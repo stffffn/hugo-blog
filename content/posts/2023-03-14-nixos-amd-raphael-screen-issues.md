@@ -29,9 +29,9 @@ Tested with LightDM + XFCE, SDDM + KDE Plasma, GDM + GNOME.
 
 A week ago I built a new desktop PC including an AMD Ryzen 7950x. For the time being I use its iGPU to run my 32" 4k monitor (LG 32BN67U-B) via HDMI.
 
-At the time of writing this post, the current NixOS version is 22.11, which comes with the 5.15.97 Linux kernel. Support for the iGPU of the new AMD Ryzen 7000 series CPUs (Raphael) comes with a later version of the kernel. Therefore, the issues aren't specific to NixOS, but affect any Linux distribution that comes with a kernel that is too old.
+At the time of writing this post, the current NixOS version is 22.11, which comes with the 5.15 Linux kernel. Support for the iGPU of the new AMD Ryzen 7000 series CPUs (Raphael) comes with a later version of the kernel (5.18). Therefore, the issues aren't specific to NixOS, but affect any Linux distribution that comes with a kernel that is too old.
 
-To use the latest kernel in NixOS I added `boot.kernelPackages = pkgs.linuxPackages_latest;` to the `configuration.nix` file.
+To use the latest kernel (6.2) in NixOS I added `boot.kernelPackages = pkgs.linuxPackages_latest;` to the `configuration.nix` file.
 
 Without any changes I booted straight to tty after the installation. With the latest kernel I was able to boot into LightDM and log into XFCE. Unfortunately, after rebooting, XFCE was flashing at my native resolution of 3840x2160. Reducing the resolution to 2560x1440 stopped the flashing.
 
@@ -51,12 +51,19 @@ I'm really looking forward to using NixOS. I love the idea of the declarative ap
 2. Follow the installation process and reboot at the end
 3. After the reboot you'll be booted straight into tty
 4. Login with your user
-5. Open the configuration file, e.g. `sudo nano ../../etc/nixos/configuration.nix`
+5. Open the configuration file, e.g.
+
+   ```bash
+   sudo nano ../../etc/nixos/configuration.nix
+   ```
+
 6. Add the following lines:
+
    ```bash
    boot.kernelPackages = pkgs.linuxPackages_latest;
    boot.kernelParams = ["amdgpu.sg_display=0"];
    ```
+
 7. Rebuild with `sudo nixos-rebuild switch` and reboot after it's finished
 8. Pick the newest generation
 9. Now you should be able to boot into your display manager and log into your desktop environment
