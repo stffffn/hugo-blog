@@ -1,5 +1,5 @@
 ---
-title: "NixOS + AMD Raphael iGPU: Fix for white/flashing screens and a guide for graphical installation"
+title: "NixOS + AMD Raphael iGPU: Fix for white/flashing Screens and a Guide for Graphical Installation"
 slug: "nixos-amd-raphael-igpu-screen-issues"
 date: 2023-03-14
 summary: "How to fix white or flashing screens in NixOS when using the iGPU of an AMD Ryzen 7000 series CPU (Raphael)."
@@ -11,18 +11,26 @@ tags:
   - Linux
 ---
 
-This post has a tl;dr section just for the necessary changes to fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you'll find a condensed guide for the graphical installation process.
+This post has a tl;dr section just for the necessary changes to get the iGPU working and fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you'll find a condensed guide for the graphical installation process.
 
 ## tl;dr
 
-To fix the white or flashing screen issue, add the following lines to your `configuration.nix` file:
+To be able to use the iGPU of your Ryzen 7000-series CPU you can either...
 
-```bash
-boot.kernelPackages = pkgs.linuxPackages_latest;
-boot.kernelParams = ["amdgpu.sg_display=0"];
-```
+- use the 6.1 kernel:
+  ```bash
+  boot.kernelPackages = pkgs.linuxPackages_6_1;
+  ```
 
-Well, at least that worked for me.  
+or
+
+- use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:
+  ```bash
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = ["amdgpu.sg_display=0"];
+  ```
+
+Well, at least both solutions worked for me.  
 Tested with LightDM + XFCE, SDDM + KDE Plasma, GDM + GNOME.
 
 ## My experience
@@ -43,6 +51,19 @@ In the comments, [user yswtrue suggested](https://gitlab.freedesktop.org/drm/amd
 
 So, adding `boot.kernelParams = ["amdgpu.sg_display=0"]` to `configuration.nix` also fixed the problem with a flashing screen in XFCE and the white screen in SDDM + KDE Plasma and GDM + Gnome.
 
+As stated in the Phoronix article, AMD introduced the relevant changes in kernel version 6.2.  
+Therefore, kernel version 6.1 would be another solution without the need for a kernel parameter:
+
+```bash
+boot.kernelPackages = pkgs.linuxPackages_6_1;
+```
+
+Yes, the GitLab issue speaks of kernel versions 6.1.4 or higher to be affected, but I tested it with 6.1.16 (that's what NixOS installs automatically with the line above) and it worked for me.
+
+I also tested the mainline kernel version 6.3-rc1 and unfortunately this version still needed the additional kernel parameter.
+
+Personally I'll use the latest kernel, since there should be more changes and improvements in kernel 6.2 regarding AMD Raphael.
+
 I'm really looking forward to using NixOS. I love the idea of the declarative approach, which already made this whole troubleshooting and experimenting process so much more comfortable for me.
 
 ## Installation guide
@@ -57,11 +78,19 @@ I'm really looking forward to using NixOS. I love the idea of the declarative ap
    sudo nano ../../etc/nixos/configuration.nix
    ```
 
-6. Add the following lines:
+6. Add one of the following solutions to your configuration:
+
+   - If you want to go with the latest kernel:
 
    ```bash
    boot.kernelPackages = pkgs.linuxPackages_latest;
    boot.kernelParams = ["amdgpu.sg_display=0"];
+   ```
+
+   - If you want to stick with kernel 6.1:
+
+   ```bash
+   boot.kernelPackages = pkgs.linuxPackages_6_1;
    ```
 
 7. Rebuild with `sudo nixos-rebuild switch` and reboot after it's finished
