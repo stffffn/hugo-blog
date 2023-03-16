@@ -206,6 +206,7 @@ i {
 
     :not(pre) > code {
       padding: 0.2rem;
+      white-space: pre-wrap;
       border-radius: $borderRadius;
       font-weight: bold;
       color: $background;
