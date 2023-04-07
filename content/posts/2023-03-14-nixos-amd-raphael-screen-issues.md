@@ -11,21 +11,26 @@ tags:
   - Linux
 ---
 
-This post has a tl;dr section just for the necessary changes to get the iGPU working and fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you'll find a condensed guide for the graphical installation process.
+> **UPDATE:**  
+> The fix is now also available as a module in [nixos-hardware](https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/amd/raphael/igpu.nix)
+
+---
+
+This post has a tl;dr section just for the necessary changes to get the integrated GPU (iGPU) working and fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you'll find a condensed guide for the graphical installation process.
 
 ## tl;dr
 
-To be able to use the iGPU of your Ryzen 7000-series CPU you can either...
+To be able to use the integrated graphics of your Ryzen 7000-series CPU you can either...
 
 - use the 6.1 kernel:
-  ```bash
+  ```nix
   boot.kernelPackages = pkgs.linuxPackages_6_1;
   ```
 
 or
 
 - use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:
-  ```bash
+  ```nix
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = ["amdgpu.sg_display=0"];
   ```
@@ -45,9 +50,9 @@ Without any changes I booted straight to tty after the installation. With the la
 
 With SDDM + KDE Plasma and GDM + GNOME, I wasn't even able to see the display manager and was greeted with a white screen and my cursor.
 
-That means the latest kernel fixes only half the problem. After I tried a quick installation of Arch and experienced the exact same issues, I did some research and stumbled upon this issue on the GitLab instance of freedesktop.org: [Flickering or constant solid white screen with kernel >=6.1.4](https://gitlab.freedesktop.org/drm/amd/-/issues/2354)
+That means the latest kernel fixes only half the problem. After I tried a quick installation of Arch and experienced the exact same issues, I did some research and stumbled upon this issue on the GitLab instance of freedesktop.org: [Flickering or constant solid white screen with kernel >=6.1.4](https://gitlab.freedesktop.org/drm/amd/-/issues/2354 "Flickering or constant solid white screen with kernel >=6.1.4")
 
-In the comments, [user yswtrue suggested](https://gitlab.freedesktop.org/drm/amd/-/issues/2354#note_1765479) to use the kernel parameter `amdgpu.sg_display=0`. Searching for this parameter I found [this post on Phoronix](https://www.phoronix.com/news/AMD-Scatter-Gather-Re-Enabled), which references said GitLab issue and gives further background information on the problem.
+In the comments, [user yswtrue suggested](https://gitlab.freedesktop.org/drm/amd/-/issues/2354#note_1765479 "Flickering or constant solid white screen with kernel >=6.1.4") to use the kernel parameter `amdgpu.sg_display=0`. Searching for this parameter I found [this post on Phoronix](https://www.phoronix.com/news/AMD-Scatter-Gather-Re-Enabled "AMD Re-Enables Scatter/Gather Support For All APUs On Linux"), which references said GitLab issue and gives further background information on the problem.
 
 So, adding `boot.kernelParams = ["amdgpu.sg_display=0"]` to `configuration.nix` also fixed the problem with a flashing screen in XFCE and the white screen in SDDM + KDE Plasma and GDM + Gnome.
 
@@ -82,17 +87,28 @@ I'm really looking forward to using NixOS. I love the idea of the declarative ap
 
    - If you want to go with the latest kernel:
 
-   ```bash
+   ```nix
    boot.kernelPackages = pkgs.linuxPackages_latest;
    boot.kernelParams = ["amdgpu.sg_display=0"];
    ```
 
    - If you want to stick with kernel 6.1:
 
-   ```bash
+   ```nix
    boot.kernelPackages = pkgs.linuxPackages_6_1;
    ```
 
-7. Rebuild with `sudo nixos-rebuild switch` and reboot after it's finished
-8. Pick the newest generation
-9. Now you should be able to boot into your display manager and log into your desktop environment
+7. Rebuild with
+
+   ```bash
+   sudo nixos-rebuild switch
+   ```
+
+8. Reboot after the rebuild is finished
+
+   ```bash
+   reboot
+   ```
+
+9. Pick the newest generation
+10. Now you should be able to boot into your display manager and log into your desktop environment
