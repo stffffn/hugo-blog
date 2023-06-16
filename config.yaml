@@ -1,5 +1,5 @@
 title: "Bla Bli Blog"
-languageCode: "en-us"
+languageCode: "en-US"
 baseURL: https://blabli.blog
 canonifyURLs: true
 disableKinds: "section"
@@ -33,4 +33,4 @@ permalinks:
   posts: "post/:year/:month/:day/:slug/"
 markup:
   highlight:
-    style: "native"
+    style: "doom-one"

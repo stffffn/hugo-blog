@@ -3,6 +3,7 @@
     target="_blank" rel="noopener noreferrer"
   {{ end }}
   href="{{ .Destination | safeURL }}"
-  {{ with .Title }}aria-label="{{ . }}" title="{{ . }}"{{ end }}>
-  {{ .Text | safeHTML }}
-</a>
+  {{ with .Title }}aria-label="{{ . }}" title="{{ . }}"{{ end }}
+  >{{ .Text | safeHTML }}</a
+>
+{{- /* This comment removes trailing newlines. */ -}}
