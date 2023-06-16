@@ -23,17 +23,19 @@ This post has a tl;dr section just for the necessary changes to get the integrat
 To be able to use the integrated graphics of your Ryzen 7000-series CPU you can either...
 
 - use the 6.1 kernel:
-  ```nix
-  boot.kernelPackages = pkgs.linuxPackages_6_1;
-  ```
+
+```nix
+boot.kernelPackages = pkgs.linuxPackages_6_1;
+```
 
 or
 
 - use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:
-  ```nix
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = ["amdgpu.sg_display=0"];
-  ```
+
+```nix
+boot.kernelPackages = pkgs.linuxPackages_latest;
+boot.kernelParams = ["amdgpu.sg_display=0"];
+```
 
 Well, at least both solutions worked for me.  
 Tested with LightDM + XFCE, SDDM + KDE Plasma, GDM + GNOME.
@@ -44,7 +46,7 @@ A week ago I built a new desktop PC including an AMD Ryzen 7950x. For the time b
 
 At the time of writing this post, the current NixOS version is 22.11, which comes with the 5.15 Linux kernel. Support for the iGPU of the new AMD Ryzen 7000 series CPUs (Raphael) comes with a later version of the kernel (5.18). Therefore, the issues aren't specific to NixOS, but affect any Linux distribution that comes with a kernel that is too old.
 
-To use the latest kernel (6.2) in NixOS I added `boot.kernelPackages = pkgs.linuxPackages_latest;` to the `configuration.nix` file.
+To use the latest kernel (6.2) in NixOS I added `boot.kernelPackages = pkgs.linuxPackages_latest` to the `configuration.nix` file.
 
 Without any changes I booted straight to tty after the installation. With the latest kernel I was able to boot into LightDM and log into XFCE. Unfortunately, after rebooting, XFCE was flashing at my native resolution of 3840x2160. Reducing the resolution to 2560x1440 stopped the flashing.
 
@@ -59,7 +61,7 @@ So, adding `boot.kernelParams = ["amdgpu.sg_display=0"]` to `configuration.nix` 
 As stated in the Phoronix article, AMD introduced the relevant changes in kernel version 6.2.  
 Therefore, kernel version 6.1 would be another solution without the need for a kernel parameter:
 
-```bash
+```nix
 boot.kernelPackages = pkgs.linuxPackages_6_1;
 ```
 
@@ -79,36 +81,36 @@ I'm really looking forward to using NixOS. I love the idea of the declarative ap
 4. Login with your user
 5. Open the configuration file, e.g.
 
-   ```bash
-   sudo nano ../../etc/nixos/configuration.nix
-   ```
+```bash
+sudo nano ../../etc/nixos/configuration.nix
+```
 
 6. Add one of the following solutions to your configuration:
 
-   - If you want to go with the latest kernel:
+- If you want to go with the latest kernel:
 
-   ```nix
-   boot.kernelPackages = pkgs.linuxPackages_latest;
-   boot.kernelParams = ["amdgpu.sg_display=0"];
-   ```
+```nix
+boot.kernelPackages = pkgs.linuxPackages_latest;
+boot.kernelParams = ["amdgpu.sg_display=0"];
+```
 
-   - If you want to stick with kernel 6.1:
+- If you want to stick with kernel 6.1:
 
-   ```nix
-   boot.kernelPackages = pkgs.linuxPackages_6_1;
-   ```
+```nix
+boot.kernelPackages = pkgs.linuxPackages_6_1;
+```
 
 7. Rebuild with
 
-   ```bash
-   sudo nixos-rebuild switch
-   ```
+```bash
+sudo nixos-rebuild switch
+```
 
 8. Reboot after the rebuild is finished
 
-   ```bash
-   reboot
-   ```
+```bash
+reboot
+```
 
 9. Pick the newest generation
 10. Now you should be able to boot into your display manager and log into your desktop environment
