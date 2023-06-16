@@ -11,10 +11,7 @@ tags:
   - Linux
 ---
 
-> **UPDATE:**  
-> The fix is now also available as a module in [nixos-hardware](https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/amd/raphael/igpu.nix)
-
----
+{{<alert type="update" headline="Update" content="The fix is now also available as a module in [nixos-hardware](https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/amd/raphael/igpu.nix)">}}
 
 This post has a tl;dr section just for the necessary changes to get the integrated GPU (iGPU) working and fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you'll find a condensed guide for the graphical installation process.
 
@@ -28,9 +25,7 @@ To be able to use the integrated graphics of your Ryzen 7000-series CPU you can 
 boot.kernelPackages = pkgs.linuxPackages_6_1;
 ```
 
-or
-
-- use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:
+- or use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:
 
 ```nix
 boot.kernelPackages = pkgs.linuxPackages_latest;

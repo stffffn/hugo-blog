@@ -207,6 +207,7 @@ i {
     }
 
     pre {
+      margin: 1rem 0;
       padding: 1rem;
       border-radius: $borderRadius;
       overflow-y: scroll;
@@ -221,5 +222,39 @@ i {
       color: #ea8b92;
       background-color: #38252a;
     }
+  }
+}
+
+.alert {
+  margin: 1rem 0;
+  padding: 1rem;
+  color: $background;
+  border-radius: $borderRadius;
+  font-weight: 500;
+
+  a {
+    color: $background;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  h3,
+  p {
+    margin: 0;
+  }
+
+  &-info {
+    background-color: #a49937;
+  }
+
+  &-update {
+    background-color: #3e803e;
+  }
+
+  &-error {
+    background-color: #a33541;
   }
 }
