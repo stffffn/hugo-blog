@@ -161,6 +161,7 @@ i {
           text-decoration: none;
 
           &::after {
+            margin-left: 0.5rem;
             vertical-align: top;
             font-family: "Font Awesome 6 Free";
             content: "\f0c1";
