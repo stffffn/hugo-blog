@@ -113,6 +113,7 @@ i {
       .post-content h2 a:hover::after,
       .post-content h3 a:hover::after,
       .post-content h4 a:hover::after {
+        margin-left: 0.5rem;
         vertical-align: top;
         font-family: "Font Awesome 6 Free";
         content: "\f0c1"; }
