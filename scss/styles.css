@@ -150,17 +150,27 @@ i {
   color: #18181b;
   border-radius: 0.375rem;
   font-weight: 500; }
-  .alert a {
-    color: #18181b;
-    text-decoration: underline; }
-    .alert a:hover {
-      text-decoration: none; }
   .alert h3,
   .alert p {
     margin: 0; }
+  .alert h3 {
+    margin-bottom: 0.5rem; }
+    .alert h3::before {
+      margin-right: 0.5rem;
+      display: inline-block;
+      font-family: "Font Awesome 6 Free"; }
   .alert-info {
-    background-color: #a49937; }
+    color: #c4e4f4;
+    background-color: #3e6071; }
+    .alert-info h3::before {
+      content: "\f0eb"; }
   .alert-update {
-    background-color: #3e803e; }
+    color: #b0f0b0;
+    background-color: #3f663f; }
+    .alert-update h3::before {
+      content: "\f05a"; }
   .alert-error {
-    background-color: #a33541; }
+    color: #ec9ea6;
+    background-color: #75272f; }
+    .alert-error h3::before {
+      content: "\f071"; }
