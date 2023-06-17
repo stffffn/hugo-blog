@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth; }
+
 body {
   display: flex;
   flex-direction: column;
@@ -96,6 +99,23 @@ i {
   .post-content ul:has(li):has(input[type="checkbox"]) {
     padding-left: 1rem;
     list-style: none; }
+  .post-content h1 a,
+  .post-content h2 a,
+  .post-content h3 a,
+  .post-content h4 a {
+    color: #e0e0e0; }
+    .post-content h1 a:hover,
+    .post-content h2 a:hover,
+    .post-content h3 a:hover,
+    .post-content h4 a:hover {
+      text-decoration: none; }
+      .post-content h1 a:hover::after,
+      .post-content h2 a:hover::after,
+      .post-content h3 a:hover::after,
+      .post-content h4 a:hover::after {
+        vertical-align: top;
+        font-family: "Font Awesome 6 Free";
+        content: "\f0c1"; }
   .post-content a {
     color: #5496ff; }
     .post-content a:hover {
@@ -138,10 +158,16 @@ i {
     border-radius: 0.375rem;
     overflow-y: scroll; }
   .post-content code {
-    font-size: 0.875rem; }
+    font-size: 0.875rem;
+    /* Fixes iOS font sizing anomaly
+      Source: https://github.com/adityatelange/hugo-PaperMod/issues/828#issuecomment-1171994855 */
+    text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%; }
   .post-content :not(pre) > code {
     padding: 0.2rem 0.2rem 0.1rem 0.2rem;
-    color: #ea8b92;
+    color: #ef8383;
     background-color: #38252a; }
 
 .alert {
@@ -174,3 +200,24 @@ i {
     background-color: #75272f; }
     .alert-error h3::before {
       content: "\f071"; }
+
+.toc {
+  margin: 1rem 0;
+  border-radius: 0.375rem;
+  color: #e0e0e0;
+  background-color: #28282d; }
+  .toc a {
+    color: #e0e0e0; }
+    .toc a:hover {
+      color: #5496ff; }
+  .toc summary {
+    padding: 1rem; }
+    .toc summary:hover {
+      cursor: pointer; }
+  .toc nav {
+    padding: 0 1rem 1rem 0; }
+  .toc ul {
+    margin: 0;
+    padding-left: 2.875rem; }
+  .toc li > ul {
+    padding-left: 1.5rem; }
