@@ -5,6 +5,12 @@
         <h2>{{ .Title }}</h2>
         {{ partial "post_data" . }}
       </div>
+      {{ if .Params.toc }}
+        <details class="toc">
+          <summary>Table of Contents</summary>
+          {{ .TableOfContents }}
+        </details>
+      {{ end }}
       <div class="post-content">{{ .Content }}</div>
     </article>
   </main>

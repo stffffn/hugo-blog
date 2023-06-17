@@ -11,6 +11,10 @@ $borderRadius: 0.375rem;
 $icon: 1.125rem;
 $smallText: 0.875rem;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -298,5 +302,41 @@ i {
     h3::before {
       content: "\f071";
     }
+  }
+}
+
+.toc {
+  margin: 1rem 0;
+  border-radius: $borderRadius;
+  color: $primaryColor;
+  background-color: $accentBackground;
+
+  a {
+    color: $primaryColor;
+
+    &:hover {
+      color: $highlightColor;
+    }
+  }
+
+  summary {
+    padding: 1rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  nav {
+    padding: 0 1rem 1rem 0;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 2.875rem;
+  }
+
+  li > ul {
+    padding-left: 1.5rem;
   }
 }
