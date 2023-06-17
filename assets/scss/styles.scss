@@ -146,6 +146,25 @@ i {
       list-style: none;
     }
 
+    h1,
+    h2,
+    h3,
+    h4 {
+      a {
+        color: $primaryColor;
+
+        &:hover {
+          text-decoration: none;
+
+          &::after {
+            vertical-align: top;
+            font-family: "Font Awesome 6 Free";
+            content: "\f0c1";
+          }
+        }
+      }
+    }
+
     a {
       color: $highlightColor;
 
@@ -215,11 +234,18 @@ i {
 
     code {
       font-size: 0.875rem;
+
+      /* Fixes iOS font sizing anomaly
+      Source: https://github.com/adityatelange/hugo-PaperMod/issues/828#issuecomment-1171994855 */
+      text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     :not(pre) > code {
       padding: 0.2rem 0.2rem 0.1rem 0.2rem;
-      color: #ea8b92;
+      color: #ef8383;
       background-color: #38252a;
     }
   }
