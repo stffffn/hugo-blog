@@ -232,29 +232,45 @@ i {
   border-radius: $borderRadius;
   font-weight: 500;
 
-  a {
-    color: $background;
-    text-decoration: underline;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
   h3,
   p {
     margin: 0;
   }
 
+  h3 {
+    margin-bottom: 0.5rem;
+
+    &::before {
+      margin-right: 0.5rem;
+      display: inline-block;
+      font-family: "Font Awesome 6 Free";
+    }
+  }
+
   &-info {
-    background-color: #a49937;
+    color: #c4e4f4;
+    background-color: #3e6071;
+
+    h3::before {
+      content: "\f0eb";
+    }
   }
 
   &-update {
-    background-color: #3e803e;
+    color: #b0f0b0;
+    background-color: #3f663f;
+
+    h3::before {
+      content: "\f05a";
+    }
   }
 
   &-error {
-    background-color: #a33541;
+    color: #ec9ea6;
+    background-color: #75272f;
+
+    h3::before {
+      content: "\f071";
+    }
   }
 }
