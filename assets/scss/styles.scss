@@ -12,6 +12,7 @@ $icon: 1.125rem;
 $smallText: 0.875rem;
 
 html {
+  height: -webkit-fill-available;
   scroll-behavior: smooth;
 }
 
