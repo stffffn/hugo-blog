@@ -32,5 +32,7 @@ menu:
 permalinks:
   posts: "post/:year/:month/:day/:slug/"
 markup:
+  tableOfContents:
+    endLevel: 4
   highlight:
     style: "doom-one"
