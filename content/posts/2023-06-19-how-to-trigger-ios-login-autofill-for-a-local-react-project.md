@@ -2,7 +2,7 @@
 title: "How to trigger iOS Login Autofill for a local React Project"
 slug: "ios-autofill-react"
 date: 2023-06-19
-summary: "Summary goes here"
+summary: "How to trigger the automatic iOS Login Autofill for a locally running React Project."
 toc: true
 tags:
   - macOS
@@ -12,7 +12,7 @@ tags:
   - frontend
 ---
 
-I once had to debug a problem for a React project that was a side effect of the iOS autofill login. Triggering the iOS autofill for a locally running React project wasn't quite straightforward, so I wanted to document my findings in this blog post.
+I once had to debug a problem for a React project that was a side effect of the automatic iOS login autofill. Triggering the iOS autofill for a locally running React project wasn't quite straightforward, so I wanted to document my findings in this blog post.
 
 ## tld;dr
 
@@ -26,13 +26,13 @@ Safari on iOS offers autofill for login forms if you have the login information 
 
 However, autofill is only triggered automatically if you have a secure connection (https) with a valid SSL certificate. Otherwise, autofill is offered, but only if you click on the corresponding input field yourself.
 
-The motto is: We only offer it to you automatically if it is really secure, otherwise you do it consciously on your own responsibility.
+The motto seems to be: We only offer it to you automatically if it is really secure, otherwise you do it consciously on your own responsibility.
 
 {{<alert type="info" headline="Real Device & Simulator" content="It works both with a real iOS device as well as with the simulator available on macOS.">}}
 
 ## Save login data on iOS
 
-As already mentioned, the autofill can only be triggered if the login data for the matching URL has been saved. Therefore, I would like to document the creation of this data at the beginning, since we will refer to it in the course.
+As already mentioned, the autofill can only be triggered if the login data for the matching URL has been saved. Therefore, I want like to document the creation of this data at the beginning, as we will refer to it in the process.
 
 The procedure is similar for a real device and the simulator:
 
