@@ -396,7 +396,7 @@ aria-label="React Multiple Apollo Clients" title="React Multiple Apollo Clients"
 &lt;p>I won&amp;rsquo;t go into the details of integrating a third API at this point, &lt;del>as this post is already way too long already&lt;/del> as it&amp;rsquo;s more or less exactly the same process as for the second client.&lt;/p>
 &lt;p>Therefore a short summary:&lt;/p>
 &lt;ol>
-&lt;li>Add a third client to &lt;code>ApolloClients.ts&lt;/code>.&lt;/li>
+&lt;li>Add a third client to &lt;code>ApolloClients.ts&lt;/code>&lt;/li>
 &lt;li>Add the client to &lt;code>ApolloMultiClientProvider.tsx&lt;/code>&lt;/li>
 &lt;li>Create a new GraphQL Code Generator configuration in &lt;code>codegen&lt;/code>
 &lt;ul>

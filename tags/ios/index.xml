@@ -27,17 +27,17 @@ Simulator: Enter anything&lt;/li>
 &lt;li>However, an IP can be entered manually&lt;/li>
 &lt;/ul>
 &lt;h3 id="connections-without-https">&lt;a href="#connections-without-https">Connections without https&lt;/a>&lt;/h3>&lt;h4 id="customizing-the-etchosts-file">&lt;a href="#customizing-the-etchosts-file">Customizing the &lt;code>/etc/hosts&lt;/code> file&lt;/a>&lt;/h4>&lt;ul>
-&lt;li>Assumption: An IP is not accepted for the autofill (although you could create the login data manually).&lt;/li>
+&lt;li>Assumption: An IP is not accepted for the autofill (although you could create the login data manually)&lt;/li>
 &lt;li>E.g. from &lt;code>127.0.0.1 localhost&lt;/code> to &lt;code>127.0.0.1 thisisafakedomain.com&lt;/code>&lt;/li>
 &lt;li>Calling the page (&lt;code>thisisafakedomain.com:3000&lt;/code>) works fine, but autofill is still not triggered&lt;/li>
 &lt;/ul>
 &lt;h4 id="starting-the-app-on-port-80-http">&lt;a href="#starting-the-app-on-port-80-http">Starting the app on port 80 (http)&lt;/a>&lt;/h4>&lt;ul>
-&lt;li>Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually).&lt;/li>
-&lt;li>Background: Port 80 is reserved for http, so you don&amp;rsquo;t need to specify the port anymore. So instead of &lt;code>thisisafakedomain.com:3000&lt;/code> you can simply call &lt;code>thisisafakedomain.com&lt;/code>.&lt;/li>
-&lt;li>It can be started with &lt;code>sudo PORT=80 npm run serve&lt;/code>.&lt;/li>
+&lt;li>Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually)&lt;/li>
+&lt;li>Background: Port 80 is reserved for http, so you don&amp;rsquo;t need to specify the port anymore. So instead of &lt;code>thisisafakedomain.com:3000&lt;/code> you can simply call &lt;code>thisisafakedomain.com&lt;/code>&lt;/li>
+&lt;li>It can be started with &lt;code>sudo PORT=80 npm run serve&lt;/code>&lt;/li>
 &lt;li>Calling the page works fine, but autofill is still not triggered&lt;/li>
 &lt;/ul>
-&lt;h4 id="hypothesis">&lt;a href="#hypothesis">Hypothesis&lt;/a>&lt;/h4>&lt;p>Since neither an IP nor the additional specification of a port in a URL can be responsible for this, only the insecure connection (http instead of https) remains after the exclusion procedure due to the lack of an SSL certificate.&lt;/p>
+&lt;h3 id="hypothesis">&lt;a href="#hypothesis">Hypothesis&lt;/a>&lt;/h3>&lt;p>Since neither an IP nor the additional specification of a port in a URL can be responsible for this, only the insecure connection (http instead of https) remains after the exclusion procedure due to the lack of an SSL certificate.&lt;/p>
 &lt;h2 id="what-worked">&lt;a href="#what-worked">What worked&lt;/a>&lt;/h2>&lt;h3 id="tunneling-services">&lt;a href="#tunneling-services">Tunneling Services&lt;/a>&lt;/h3>&lt;p>To avoid going straight back into some configuration cave, I first tried Tunneling Services to test my hypothesis.&lt;/p>
 &lt;h4 id="ngrok">&lt;a href="#ngrok">ngrok&lt;/a>&lt;/h4>&lt;p>I tested &lt;a
 target="_blank" rel="noopener noreferrer"
