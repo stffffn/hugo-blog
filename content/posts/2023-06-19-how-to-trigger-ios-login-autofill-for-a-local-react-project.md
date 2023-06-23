@@ -60,18 +60,18 @@ In the beginning, I tried to see if the autofill would work simply via localhost
 
 #### Customizing the `/etc/hosts` file
 
-- Assumption: An IP is not accepted for the autofill (although you could create the login data manually).
+- Assumption: An IP is not accepted for the autofill (although you could create the login data manually)
 - E.g. from `127.0.0.1 localhost` to `127.0.0.1 thisisafakedomain.com`
 - Calling the page (`thisisafakedomain.com:3000`) works fine, but autofill is still not triggered
 
 #### Starting the app on port 80 (http)
 
-- Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually).
-- Background: Port 80 is reserved for http, so you don't need to specify the port anymore. So instead of `thisisafakedomain.com:3000` you can simply call `thisisafakedomain.com`.
-- It can be started with `sudo PORT=80 npm run serve`.
+- Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually)
+- Background: Port 80 is reserved for http, so you don't need to specify the port anymore. So instead of `thisisafakedomain.com:3000` you can simply call `thisisafakedomain.com`
+- It can be started with `sudo PORT=80 npm run serve`
 - Calling the page works fine, but autofill is still not triggered
 
-#### Hypothesis
+### Hypothesis
 
 Since neither an IP nor the additional specification of a port in a URL can be responsible for this, only the insecure connection (http instead of https) remains after the exclusion procedure due to the lack of an SSL certificate.
 

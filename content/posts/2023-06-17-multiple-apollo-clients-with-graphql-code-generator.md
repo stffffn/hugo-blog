@@ -517,7 +517,7 @@ I won't go into the details of integrating a third API at this point, ~~as this 
 
 Therefore a short summary:
 
-1. Add a third client to `ApolloClients.ts`.
+1. Add a third client to `ApolloClients.ts`
 2. Add the client to `ApolloMultiClientProvider.tsx`
 3. Create a new GraphQL Code Generator configuration in `codegen`
    - Don't forget to add the custom hooks and the corresponding client name in the configuration
