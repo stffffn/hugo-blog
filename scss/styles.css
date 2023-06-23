@@ -165,6 +165,7 @@ i {
     overflow-y: scroll; }
   .post-content code {
     font-size: 0.875rem;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     /* Fixes iOS font sizing anomaly
       Source: https://github.com/adityatelange/hugo-PaperMod/issues/828#issuecomment-1171994855 */
     text-size-adjust: 100%;
