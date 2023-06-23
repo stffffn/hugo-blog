@@ -1,1 +1,527 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>react on Bla Bli Blog</title><link>https://blabli.blog/tags/react/</link><description>Recent content in react on Bla Bli Blog</description><language>en-US</language><lastBuildDate>Mon, 19 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/react/index.xml" rel="self" type="application/rss+xml"/><item><title>How to trigger iOS Login Autofill for a local React Project</title><link>https://blabli.blog/post/2023/06/19/ios-autofill-react/</link><guid>https://blabli.blog/post/2023/06/19/ios-autofill-react/</guid><pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate><description>How to trigger the automatic iOS Login Autofill for a locally running React Project.</description></item><item><title>Multiple Apollo Clients with GraphQL Code Generator</title><link>https://blabli.blog/post/2023/06/17/multiple-apollo-clients/</link><guid>https://blabli.blog/post/2023/06/17/multiple-apollo-clients/</guid><pubDate>Sat, 17 Jun 2023 00:00:00 +0000</pubDate><description>How to implement multiple Apollo Clients in a React project with GraphQL Code Generator.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>react on Bla Bli Blog</title><link>https://blabli.blog/tags/react/</link><description>The personal blog of stffffn</description><language>en-US</language><lastBuildDate>Mon, 19 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/react/index.xml" rel="self" type="application/rss+xml"/><item><title>How to trigger iOS Login Autofill for a local React Project</title><link>https://blabli.blog/post/2023/06/19/ios-autofill-react/</link><guid>https://blabli.blog/post/2023/06/19/ios-autofill-react/</guid><pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate><description>&lt;p>I once had to debug a problem for a React project that was a side effect of the automatic iOS login autofill. Triggering the iOS autofill for a locally running React project wasn&amp;rsquo;t quite straightforward, so I wanted to document my findings in this blog post.&lt;/p>
+&lt;h2 id="tlddr">&lt;a href="#tlddr">tld;dr&lt;/a>&lt;/h2>&lt;p>You need an https connection with a valid SSL certificate or it won&amp;rsquo;t work.&lt;/p>
+&lt;p>How to do this is explained below.&lt;/p>
+&lt;h2 id="intro">&lt;a href="#intro">Intro&lt;/a>&lt;/h2>&lt;p>Safari on iOS offers autofill for login forms if you have the login information stored in your keychain.&lt;/p>
+&lt;p>However, autofill is only triggered automatically if you have a secure connection (https) with a valid SSL certificate. Otherwise, autofill is offered, but only if you click on the corresponding input field yourself.&lt;/p>
+&lt;p>The motto seems to be: We only offer it to you automatically if it is really secure, otherwise you do it consciously on your own responsibility.&lt;/p>
+&lt;div class="alert alert-info">
+&lt;h3>Real Device &amp;amp; Simulator&lt;/h3>
+&lt;p>It works both with a real iOS device as well as with the simulator available on macOS.&lt;/p>
+&lt;/div>
+&lt;h2 id="save-login-data-on-ios">&lt;a href="#save-login-data-on-ios">Save login data on iOS&lt;/a>&lt;/h2>&lt;p>As already mentioned, the autofill can only be triggered if the login data for the matching URL has been saved. Therefore, I want like to document the creation of this data at the beginning, as we will refer to it in the process.&lt;/p>
+&lt;p>The procedure is similar for a real device and the simulator:&lt;/p>
+&lt;ol>
+&lt;li>Open the &amp;ldquo;Settings&amp;rdquo; app&lt;/li>
+&lt;li>Go to &amp;ldquo;Passwords&amp;rdquo;&lt;/li>
+&lt;li>Real: Enter the device password
+Simulator: Enter anything&lt;/li>
+&lt;li>Enable &amp;ldquo;Autofill Passwords&amp;rdquo;&lt;/li>
+&lt;li>Add a new entry with the + symbol&lt;/li>
+&lt;li>For &amp;ldquo;Website&amp;rdquo; insert the corresponding URL&lt;/li>
+&lt;li>Fill in &amp;ldquo;User Name&amp;rdquo; and &amp;ldquo;Password&amp;rdquo; according to the user data&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-did-not-work">&lt;a href="#what-did-not-work">What did not work&lt;/a>&lt;/h2>&lt;p>Since I can well imagine that some people will come up with similar ideas to mine when reading this post, I have also documented all the variants I tried that did not work, for the sake of completeness. So you don&amp;rsquo;t have to do that anymore!&lt;/p>
+&lt;p>In the beginning, I tried to see if the autofill would work simply via localhost or the corresponding IP in the network, but that didn&amp;rsquo;t work. I made some assumptions about this below.&lt;/p>
+&lt;h3 id="url-restrictions">&lt;a href="#url-restrictions">URL restrictions&lt;/a>&lt;/h3>&lt;ul>
+&lt;li>A &lt;code>localhost&lt;/code> address cannot be saved manually via the settings. It can only be saved via the context menu at a new login.&lt;/li>
+&lt;li>However, an IP can be entered manually&lt;/li>
+&lt;/ul>
+&lt;h3 id="connections-without-https">&lt;a href="#connections-without-https">Connections without https&lt;/a>&lt;/h3>&lt;h4 id="customizing-the-etchosts-file">&lt;a href="#customizing-the-etchosts-file">Customizing the &lt;code>/etc/hosts&lt;/code> file&lt;/a>&lt;/h4>&lt;ul>
+&lt;li>Assumption: An IP is not accepted for the autofill (although you could create the login data manually).&lt;/li>
+&lt;li>E.g. from &lt;code>127.0.0.1 localhost&lt;/code> to &lt;code>127.0.0.1 thisisafakedomain.com&lt;/code>&lt;/li>
+&lt;li>Calling the page (&lt;code>thisisafakedomain.com:3000&lt;/code>) works fine, but autofill is still not triggered&lt;/li>
+&lt;/ul>
+&lt;h4 id="starting-the-app-on-port-80-http">&lt;a href="#starting-the-app-on-port-80-http">Starting the app on port 80 (http)&lt;/a>&lt;/h4>&lt;ul>
+&lt;li>Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually).&lt;/li>
+&lt;li>Background: Port 80 is reserved for http, so you don&amp;rsquo;t need to specify the port anymore. So instead of &lt;code>thisisafakedomain.com:3000&lt;/code> you can simply call &lt;code>thisisafakedomain.com&lt;/code>.&lt;/li>
+&lt;li>It can be started with &lt;code>sudo PORT=80 npm run serve&lt;/code>.&lt;/li>
+&lt;li>Calling the page works fine, but autofill is still not triggered&lt;/li>
+&lt;/ul>
+&lt;h4 id="hypothesis">&lt;a href="#hypothesis">Hypothesis&lt;/a>&lt;/h4>&lt;p>Since neither an IP nor the additional specification of a port in a URL can be responsible for this, only the insecure connection (http instead of https) remains after the exclusion procedure due to the lack of an SSL certificate.&lt;/p>
+&lt;h2 id="what-worked">&lt;a href="#what-worked">What worked&lt;/a>&lt;/h2>&lt;h3 id="tunneling-services">&lt;a href="#tunneling-services">Tunneling Services&lt;/a>&lt;/h3>&lt;p>To avoid going straight back into some configuration cave, I first tried Tunneling Services to test my hypothesis.&lt;/p>
+&lt;h4 id="ngrok">&lt;a href="#ngrok">ngrok&lt;/a>&lt;/h4>&lt;p>I tested &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://ngrok.com/"
+aria-label="ngrok" title="ngrok"
+>ngrok&lt;/a
+> first. It worked right out of the box and the free tier allows non-commercial use. If you want to use it in a commercial project, you have to use one of the paid tiers.&lt;/p>
+&lt;h4 id="localtunnel">&lt;a href="#localtunnel">Localtunnel&lt;/a>&lt;/h4>&lt;p>Now it is clear that a tunneling service works. During a short research I stumbled upon &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://theboroer.github.io/localtunnel-www/"
+aria-label="Localtunnel" title="Localtunnel"
+>Localtunnel&lt;/a
+>, which also worked right out of the box.&lt;/p>
+&lt;p>Localtunnel can also be installed on macOS via &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://formulae.brew.sh/formula/localtunnel#default"
+aria-label="Homebrew localtunnel" title="Homebrew localtunnel"
+>Homebrew&lt;/a
+>.&lt;/p>
+&lt;p>Just start the React app and start the tunnel with &lt;code>lt --port 3000&lt;/code> (or whatever port your React app is running on). The terminal will provide a URL that allows you to access the local application from anywhere and still make local changes to the code.&lt;/p>
+&lt;h4 id="how-to-tunnel-service">&lt;a href="#how-to-tunnel-service">How to Tunnel Service&lt;/a>&lt;/h4>&lt;ol>
+&lt;li>Start your app&lt;/li>
+&lt;li>Launch your tunnel service&lt;/li>
+&lt;li>Follow the instructions to create login data and use the corresponding URL provided by your tunnel service&lt;/li>
+&lt;li>Open this URL with Safari (make sure that the URL is also opened with https!)&lt;/li>
+&lt;li>You should be greeted directly by the native iOS autofill context menu on your login page&lt;/li>
+&lt;li>Happy debugging!&lt;/li>
+&lt;/ol>
+&lt;h3 id="local-ssl-certificate">&lt;a href="#local-ssl-certificate">Local SSL certificate&lt;/a>&lt;/h3>&lt;p>If you do not want to use a tunneling service, a local SSL certificate is another alternative.&lt;/p>
+&lt;div class="alert alert-info">
+&lt;h3>Follow along&lt;/h3>
+&lt;p>If you want to follow the next steps directly, I&amp;rsquo;ve provided a super simple React project on &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/stffffn/ios-autofill-test"
+>GitHub&lt;/a
+> with a dummy login form.&lt;/p>
+&lt;/div>
+&lt;h4 id="create-the-certificate">&lt;a href="#create-the-certificate">Create the certificate&lt;/a>&lt;/h4>&lt;p>You can use &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/FiloSottile/mkcert"
+aria-label="GitHub mkcert" title="GitHub mkcert"
+>mkcert&lt;/a
+> to create locally valid certificates. For macOS, it can be installed via &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://formulae.brew.sh/formula/mkcert#default"
+aria-label="Homebrew mkcert" title="Homebrew mkcert"
+>Homebrew&lt;/a
+>, for example.&lt;/p>
+&lt;p>After the installation we first create a Local Certificate Authority, which creates a root certificate and a key.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mkcert -install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we need to create the necessary certificates for our React project. The best way to do this is to navigate to the root directory of your React project and create a &lt;code>certificate&lt;/code> folder there, for example with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir certificate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkcert -key-file ./certificate/key.pem -cert-file ./certificate/cert.pem localhost &lt;span style="color:#c678dd">$(&lt;/span>ifconfig | grep &lt;span style="color:#98c379">&amp;#39;inet &amp;#39;&lt;/span> | grep -Fv 127.0.0.1 | awk &lt;span style="color:#98c379">&amp;#39;NR==1{print $2}&amp;#39;&lt;/span>&lt;span style="color:#c678dd">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command creates the private key and a certificate valid for &lt;code>localhost&lt;/code> and the IP of your device on the local network.&lt;/p>
+&lt;p>Now we need to add a script to the &lt;code>package.json&lt;/code> file to be able to start the app with https and the corresponding certificate as well:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;start:https&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;HTTPS=true SSL_CRT_FILE=./certificate/cert.pem SSL_KEY_FILE=./certificate/key.pem npm run start&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-the-root-certificate-on-ios">&lt;a href="#install-the-root-certificate-on-ios">Install the root certificate on iOS&lt;/a>&lt;/h4>&lt;p>Now we just need to tell iOS to trust our Local Certificate Authority.&lt;/p>
+&lt;p>In this case, I will limit myself to the macOS simulator. The installation on a real device is identical, only the way how you get the root certificate on your device is a bit different and up to you (Airdrop, Email, NAS, etc.).&lt;/p>
+&lt;p>If you don&amp;rsquo;t remember where the root certificate was created, you can find it out with this command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkcert -CAROOT
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Under macOS it is most likely located under &lt;code>/Users/&amp;lt;YourUsername&amp;gt;/Library/Application Support/mkcert&lt;/code> and is named &lt;code>rootCA.pem&lt;/code>.&lt;/p>
+&lt;p>Unfortunately, with the latest restrictions on macOS, it is no longer possible to drag and drop certificates onto the simulator. However, we can still install it relatively easily via the path. If your root certificate is located under the same path, you can copy the following link and paste it into Safari (don&amp;rsquo;t forget to change the username!): &lt;code>file:///Users/&amp;lt;YourUsername&amp;gt;/Library/Application%20Support/mkcert/rootCA.pem&lt;/code>&lt;/p>
+&lt;p>You will see a dialog asking you, if you want to allow the download of a configuration file. Click &amp;ldquo;Allow&amp;rdquo;. After that, You will then see a message indicating that the profile has been downloaded.&lt;/p>
+&lt;p>Then open the &amp;ldquo;Settings&amp;rdquo; app, navigate to &amp;ldquo;General&amp;rdquo; and then to &amp;ldquo;Device Management. The certificate will already be listed there. Click on it and install it.&lt;/p>
+&lt;p>That&amp;rsquo;s all we needed to do on iOS.&lt;/p>
+&lt;h4 id="start-the-react-app">&lt;a href="#start-the-react-app">Start the React app&lt;/a>&lt;/h4>&lt;p>Now we start the React app with the &lt;code>npm run start:https&lt;/code> script we created earlier.&lt;/p>
+&lt;p>Then we take our iOS device or the simulator, open the &amp;ldquo;Settings&amp;rdquo; app, navigate to &amp;ldquo;Passwords&amp;rdquo; and add an entry for the corresponding IP. Don&amp;rsquo;t forget to add &amp;ldquo;https://&amp;rdquo; and the port at the end. If you are using my GitHub project as a test, just enter anything for the username and password.&lt;/p>
+&lt;p>Now we can open the website directly from the password details page and should be greeted by the automatically triggered iOS autofill. Done!&lt;/p>
+&lt;p>Here is a short demo video:&lt;/p>
+&lt;video preload="metadata" controls="true">
+&lt;source src="https://blabli.blog/images/autofill/autofill.mp4#t=0.001" type="video/mp4" />
+Your browser does not support the video tag.
+&lt;/video></description></item><item><title>Multiple Apollo Clients with GraphQL Code Generator</title><link>https://blabli.blog/post/2023/06/17/multiple-apollo-clients/</link><guid>https://blabli.blog/post/2023/06/17/multiple-apollo-clients/</guid><pubDate>Sat, 17 Jun 2023 00:00:00 +0000</pubDate><description>&lt;p>In a recent React project I had to implement another, external &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://graphql.org/"
+aria-label="GraphQL" title="GraphQL"
+>GraphQL&lt;/a
+> API in addition to the existing default main GraphQL API. Everything related to the main API (schema, etc.) was already generated by using &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://the-guild.dev/graphql/codegen"
+aria-label="GraphQL Code Generator" title="GraphQL Code Generator"
+>GraphQL Code Generator&lt;/a
+>. This makes your life very easy if you always get the latest API changes automatically and also get generated functions (React hooks) for your queries and other operations.&lt;/p>
+&lt;p>During my research I stumbled across different approaches on how to handle this situation, since GraphQL is usually all about a single endpoint. In the end I came up with a different solution, mainly because none of them really dealt with GraphQL Code Generator.&lt;/p>
+&lt;p>I have created a very basic and rough example project that can be found on &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/stffffn/react-multiple-apollo-clients"
+aria-label="React Multiple Apollo Clients" title="React Multiple Apollo Clients"
+>GitHub&lt;/a
+>. The &lt;code>README&lt;/code> already provides a basic overview but in this post I will go into a little more into detail and provide a step-by-step guide.&lt;/p>
+&lt;div class="alert alert-info">
+&lt;h3>GraphQL Operations&lt;/h3>
+&lt;p>In this example I’ll focus on simple queries, but whenever I write about queries the same basically applies to mutations.&lt;/p>
+&lt;/div>
+&lt;h2 id="prerequisites">&lt;a href="#prerequisites">Prerequisites&lt;/a>&lt;/h2>&lt;ol>
+&lt;li>Create a new React project with Typescript, e.g. via &lt;code>create-react-app&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx create-react-app my-app --template typescript
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Install the following packages&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm i @apollo/client graphql
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm i -D @graphql-codegen/cli @graphql-codegen/introspection @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>Make sure that you have the necessary GraphQL language features ready for your code editor (e.g. the necessary extensions for VSCode).&lt;/li>
+&lt;/ol>
+&lt;h2 id="starting-point-with-a-single-apollo-client">&lt;a href="#starting-point-with-a-single-apollo-client">Starting point with a single Apollo Client&lt;/a>&lt;/h2>&lt;h3 id="setup-apollo-client">&lt;a href="#setup-apollo-client">Setup Apollo Client&lt;/a>&lt;/h3>&lt;p>So, let&amp;rsquo;s start with the bare minimum. First, we&amp;rsquo;ll create a new Apollo Client to retrieve some data from a GraphQL API. In this case we will use the public &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://studio.apollographql.com/public/SpaceX-pxxbxen/variant/current/home"
+aria-label="Apollo GraphQL SpaceX" title="Apollo GraphQL SpaceX"
+>SpaceX API&lt;/a
+>.&lt;/p>
+&lt;p>Create a &lt;code>graphql&lt;/code> folder in the &lt;code>src&lt;/code> directory and create an &lt;code>ApolloClients.ts&lt;/code> file in it. Add the following to this file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">ApolloClient&lt;/span>, &lt;span style="color:#c1abea">InMemoryCache&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">spacexURL&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#63c381">&amp;#34;https://spacex-production.up.railway.app/&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">spacexApolloClient&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c678dd">new&lt;/span> &lt;span style="color:#c1abea">ApolloClient&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">uri&lt;/span>: &lt;span style="color:#ef8383">spacexURL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">cache&lt;/span>: &lt;span style="color:#ef8383">new&lt;/span> &lt;span style="color:#c1abea">InMemoryCache&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We create the API URL as a separate variable and export it, because we will need it elsewhere later. In a real project, we would rather locate this URL in an environment file, for example to distinguish between staging and production.&lt;/p>
+&lt;p>To be able to use the client in our project, we need to add the &lt;code>ApolloProvider&lt;/code> to the &lt;code>index.tsx&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">React&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">ReactDOM&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react-dom/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#63c381">&amp;#34;./index.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">App&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./App&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">spacexApolloClient&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./graphql/ApolloClients&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">ApolloProvider&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">root&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">ReactDOM&lt;/span>.&lt;span style="color:#c1abea">createRoot&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ef8383">document&lt;/span>.&lt;span style="color:#c1abea">getElementById&lt;/span>(&lt;span style="color:#63c381">&amp;#34;root&amp;#34;&lt;/span>) &lt;span style="color:#c678dd">as&lt;/span> &lt;span style="color:#c1abea">HTMLElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">root&lt;/span>.&lt;span style="color:#c1abea">render&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">ApolloProvider&lt;/span> &lt;span style="color:#b3d23c">client&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>{&lt;span style="color:#c1abea">spacexApolloClient&lt;/span>}&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">React.StrictMode&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">App&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">React.StrictMode&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">ApolloProvider&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>At this point we are already able to retrieve data from the API. To do this, we create a query in &lt;code>App.tsx&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">React&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">logo&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./logo.svg&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#63c381">&amp;#34;./App.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">gql&lt;/span>, &lt;span style="color:#c1abea">useQuery&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">function&lt;/span> &lt;span style="color:#c1abea">App() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">const&lt;/span> { &lt;span style="color:#c1abea">data&lt;/span> } &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">useQuery&lt;/span>(&lt;span style="color:#c1abea">gql&lt;/span>&lt;span style="color:#98c379">`
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> query GetAllSpacexDragons {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> dragons {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> name
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> active
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> description
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#98c379"> `&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">console&lt;/span>.&lt;span style="color:#c1abea">log&lt;/span>(&lt;span style="color:#c1abea">data&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">div&lt;/span> &lt;span style="color:#b3d23c">className&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;App&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">header&lt;/span> &lt;span style="color:#b3d23c">className&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;App-header&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">img&lt;/span> &lt;span style="color:#b3d23c">src&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>{&lt;span style="color:#c1abea">logo&lt;/span>} &lt;span style="color:#b3d23c">className&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;App-logo&amp;#34;&lt;/span> &lt;span style="color:#b3d23c">alt&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;logo&amp;#34;&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">p&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">Edit&lt;/span> &amp;lt;&lt;span style="color:#e06c75">code&lt;/span>&amp;gt;&lt;span style="color:#c1abea">src&lt;/span>&lt;span style="color:#c7bf54">/&lt;/span>&lt;span style="color:#c1abea">App&lt;/span>.&lt;span style="color:#c1abea">tsx&lt;/span>&amp;lt;/&lt;span style="color:#e06c75">code&lt;/span>&amp;gt; &lt;span style="color:#c1abea">and&lt;/span> &lt;span style="color:#c1abea">save&lt;/span> &lt;span style="color:#c1abea">to&lt;/span> &lt;span style="color:#c1abea">reload&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">p&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">a&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">className&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;App-link&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">href&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;https://reactjs.org&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">target&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;_blank&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">rel&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>&lt;span style="color:#98c379">&amp;#34;noopener noreferrer&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">Learn&lt;/span> &lt;span style="color:#c1abea">React&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">a&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">header&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">div&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">default&lt;/span> &lt;span style="color:#c1abea">App&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This would be the most basic setup when working with a GraphQL API and Apollo Client. One of the main criticisms would be that the queried data is not typed. Of course we could create a type manually, but where would be the fun and convenience in that? This is where GraphQL Code Generator comes in!&lt;/p>
+&lt;h3 id="setup-graphql-code-generator">&lt;a href="#setup-graphql-code-generator">Setup GraphQL Code Generator&lt;/a>&lt;/h3>&lt;p>We have already installed the necessary packages at the very beginning. So we can start directly with creating a configuration file. To do this, create a &lt;code>codegen&lt;/code> folder in the &lt;code>graphql&lt;/code> directory and create a file called &lt;code>spacexConfig.ts&lt;/code>. In this file we add the following lines:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">CodegenConfig&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@graphql-codegen/cli&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">spacexURL&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;../ApolloClients&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">spacexConfig&lt;/span>: &lt;span style="color:#ef8383">CodegenConfig&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">schema&lt;/span>: &lt;span style="color:#ef8383">spacexURL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">documents&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [&lt;span style="color:#63c381">&amp;#34;src/**/*.graphql&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">overwrite&lt;/span>: &lt;span style="color:#ef8383">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">generates&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.ts&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-operations&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-react-apollo&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.schema.json&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [&lt;span style="color:#63c381">&amp;#34;introspection&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">default&lt;/span> &lt;span style="color:#c1abea">spacexConfig&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To run the code generation, we need to add a script to our &lt;code>package.json&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;update-graphql&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;graphql-codegen --config src/graphql/codegen/spacexConfig.ts&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you now run the script via &lt;code>npm run update-graphql&lt;/code> you will get some errors:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>✔ Parse Configuration
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>⚠ Generate outputs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ❯ Generate to src/graphql/generated/spacex.ts
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ✔ Load GraphQL schemas
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ✖ Unable to find any GraphQL &lt;span style="color:#ef8383">type&lt;/span> definitions &lt;span style="color:#c678dd">for&lt;/span> the following…
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - src/**/*.graphql
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ◼ Generate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ❯ Generate to src/graphql/generated/spacex.schema.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ✔ Load GraphQL schemas
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ✖ Unable to find any GraphQL &lt;span style="color:#ef8383">type&lt;/span> definitions &lt;span style="color:#c678dd">for&lt;/span> the following…
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - src/**/*.graphql
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ◼ Generate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This happens because we do not currently have any existing &lt;code>.graphql&lt;/code> files. We can either comment out the &lt;code>documents: [&amp;quot;src/**/*.graphql&amp;quot;]&lt;/code> line in the &lt;code>spacexConfig.tsx&lt;/code> file, or we can create a new &lt;code>.graphql&lt;/code> file with a query.&lt;/p>
+&lt;p>For the initial setup, however, the nicest approach is to comment out the line and run the script. This will create a &lt;code>generated&lt;/code> folder containing the two files &lt;code>spacex.schema.json&lt;/code> and &lt;code>spacex.ts&lt;/code>.&lt;/p>
+&lt;p>As a last step we will use the generated schema and create a &lt;code>.graphqlrc.json&lt;/code> file with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;projects&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;spacex&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;schema&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.schema.json&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;documents&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;src/**/*.graphql&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is our config file for the GraphQL language features that give us auto-completion and suggestions when writing new queries. You may need to restart your IDE for these changes to take effect.&lt;/p>
+&lt;h3 id="create-your-first-query">&lt;a href="#create-your-first-query">Create your first query&lt;/a>&lt;/h3>&lt;p>As a first step we add back the previously commented out line regarding the &lt;code>documents&lt;/code> property in &lt;code>spacexConfig.ts&lt;/code>.&lt;/p>
+&lt;p>We also extend the scripts in &lt;code>package.json&lt;/code> to ensure that we do not have to call &lt;code>update-graphql&lt;/code> every time we create a new query or make changes.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;start&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;npm run serve &amp;amp; npm run update-graphql -- --watch&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;serve&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;react-scripts start&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This way the code generation will run every time the application is started, then goes into watch mode and runs again when changes are made.&lt;/p>
+&lt;p>Now we can create the &lt;code>GetAllDragons.graphql&lt;/code> file in the &lt;code>src&lt;/code> directory and insert this query:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-graphql" data-lang="graphql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">query&lt;/span> &lt;span style="color:#76a9f9">GetAllDragons&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">dragons&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">active&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">description&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you manually type in the query field names, such as &lt;code>description&lt;/code>, you should now get auto-completion.&lt;/p>
+&lt;p>Once the file is saved, the code generation will run again.&lt;/p>
+&lt;p>Open the &lt;code>App.tsx&lt;/code> file and remove the previously created query and all related imports. Now we should be able to import the following things:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>GetAllDragonsDocument&lt;/code>: The raw query&lt;/li>
+&lt;li>&lt;code>useGetAllDragonsQuery&lt;/code>: A hook that wraps the Apollo query function and all necessary types&lt;/li>
+&lt;li>&lt;code>useGetAllDragonsLazyQuery&lt;/code>: A hook that wraps the Apollo lazy query function and all necessary types&lt;/li>
+&lt;/ul>
+&lt;p>The same would happen if we had created a mutation instead of a query (except for the lazy part):
+&lt;code>&amp;lt;MutationName&amp;gt;Document&lt;/code> and &lt;code>use&amp;lt;MutationName&amp;gt;Mutation&lt;/code>.&lt;/p>
+&lt;p>We can now replace the previous query with this one:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> { &lt;span style="color:#c1abea">data&lt;/span> } &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">useGetAllDragonsQuery&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">console&lt;/span>.&lt;span style="color:#c1abea">log&lt;/span>(&lt;span style="color:#c1abea">data&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ta-da! Now we automatically generate hooks with typed data for our queries and also get any changes made to the API. Sure, the initial setup is a bit of a hassle, but in my opinion it&amp;rsquo;s totally worth it for the convenience it gives you.&lt;/p>
+&lt;h2 id="add-a-second-apollo-client">&lt;a href="#add-a-second-apollo-client">Add a second Apollo Client&lt;/a>&lt;/h2>&lt;p>After creating the SpaceX API as our default main API, we will add the public &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://studio.apollographql.com/public/star-wars-swapi/variant/current/home"
+aria-label="Apollo GraphQL Star Wars" title="Apollo GraphQL Star Wars"
+>Star Wars API&lt;/a
+> next.&lt;/p>
+&lt;h3 id="setup-the-second-apollo-client">&lt;a href="#setup-the-second-apollo-client">Setup the second Apollo Client&lt;/a>&lt;/h3>&lt;p>As before, we add a new client for the second API to &lt;code>ApolloClient.ts&lt;/code>. Additionally we create an &lt;code>enum&lt;/code> for the API names, which will be useful in later steps.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">ApolloClient&lt;/span>, &lt;span style="color:#c1abea">InMemoryCache&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">enum&lt;/span> &lt;span style="color:#c1abea">API&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">SpaceX&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#63c381">&amp;#34;SpaceX&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">StarWars&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#63c381">&amp;#34;StarWars&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">spacexURL&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#63c381">&amp;#34;https://spacex-production.up.railway.app/&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">starWarsURL&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;https://swapi-graphql.netlify.app/.netlify/functions/index&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">spacexApolloClient&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c678dd">new&lt;/span> &lt;span style="color:#c1abea">ApolloClient&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">uri&lt;/span>: &lt;span style="color:#ef8383">spacexURL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">cache&lt;/span>: &lt;span style="color:#ef8383">new&lt;/span> &lt;span style="color:#c1abea">InMemoryCache&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">starWarsApolloClient&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c678dd">new&lt;/span> &lt;span style="color:#c1abea">ApolloClient&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">uri&lt;/span>: &lt;span style="color:#ef8383">starWarsURL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">cache&lt;/span>: &lt;span style="color:#ef8383">new&lt;/span> &lt;span style="color:#c1abea">InMemoryCache&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="add-an-apollo-multi-client-provider">&lt;a href="#add-an-apollo-multi-client-provider">Add an Apollo Multi Client Provider&lt;/a>&lt;/h3>&lt;p>Before we can start generating code for the new API, we need to create a replacement for the &lt;code>ApolloProvider&lt;/code> in &lt;code>index.tsx&lt;/code>. The current provider can only handle a single client, which is what we are passing through the props. Therefore, we need to create our own provider that can handle multiple clients. However, this provider is only half the solution and we also need to extend the generated hooks to handle multiple clients.&lt;/p>
+&lt;p>First we create the &lt;code>ApolloMultiClientProvider.tsx&lt;/code> in the &lt;code>src&lt;/code> directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">ApolloClient&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">React&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">API&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">spacexApolloClient&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">starWarsApolloClient&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./graphql/ApolloClients&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">apolloMultiClientContext&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">React&lt;/span>.&lt;span style="color:#c1abea">createContext&lt;/span>&lt;span style="color:#c7bf54">&amp;lt;&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">getClient&lt;/span>(&lt;span style="color:#c1abea">clientName&lt;/span>: &lt;span style="color:#ef8383">string&lt;/span> &lt;span style="color:#c7bf54">|&lt;/span> &lt;span style="color:#b756ff;font-weight:bold">undefined&lt;/span>)&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#c1abea">ApolloClient&lt;/span>&amp;lt;&lt;span style="color:#e06c75">any&lt;/span>&amp;gt; &lt;span style="color:#c7bf54">|&lt;/span> &lt;span style="color:#b756ff;font-weight:bold">undefined&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#c7bf54">&amp;gt;&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">getClient() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> &lt;span style="color:#b756ff;font-weight:bold">undefined&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">useApolloMultiClient&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> () &lt;span style="color:#c7bf54">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> &lt;span style="color:#c1abea">React&lt;/span>.&lt;span style="color:#c1abea">useContext&lt;/span>(&lt;span style="color:#c1abea">apolloMultiClientContext&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">ApolloMultiClientProvider&lt;/span>: &lt;span style="color:#ef8383">React.FC&lt;/span>&lt;span style="color:#c7bf54">&amp;lt;&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">children&lt;/span>: &lt;span style="color:#ef8383">React.ReactNode&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#c7bf54">&amp;gt;&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> ({ &lt;span style="color:#c1abea">children&lt;/span> }) &lt;span style="color:#c7bf54">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">getClient&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> (&lt;span style="color:#c1abea">clientName&lt;/span>: &lt;span style="color:#ef8383">string&lt;/span>) &lt;span style="color:#c7bf54">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [&lt;span style="color:#c1abea">API&lt;/span>.&lt;span style="color:#c1abea">StarWars&lt;/span>]&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#c1abea">starWarsApolloClient&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }[&lt;span style="color:#c1abea">clientName&lt;/span>] &lt;span style="color:#c7bf54">??&lt;/span> &lt;span style="color:#c1abea">spacexApolloClient&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">apolloMultiClientContext.Provider&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">value&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>{{ &lt;span style="color:#c1abea">getClient&lt;/span> }}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b3d23c">children&lt;/span>&lt;span style="color:#c7bf54">=&lt;/span>{&lt;span style="color:#c1abea">children&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then we can replace the old Apollo Provider with our new Apollo Multi Client Provider in &lt;code>index.tsx&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">React&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">ReactDOM&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;react-dom/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#63c381">&amp;#34;./index.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c1abea">App&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./App&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">ApolloMultiClientProvider&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;./ApolloMultiClientProvider&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">root&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">ReactDOM&lt;/span>.&lt;span style="color:#c1abea">createRoot&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ef8383">document&lt;/span>.&lt;span style="color:#c1abea">getElementById&lt;/span>(&lt;span style="color:#63c381">&amp;#34;root&amp;#34;&lt;/span>) &lt;span style="color:#c678dd">as&lt;/span> &lt;span style="color:#c1abea">HTMLElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">root&lt;/span>.&lt;span style="color:#c1abea">render&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">ApolloMultiClientProvider&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">React.StrictMode&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#e06c75">App&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">React.StrictMode&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#e06c75">ApolloMultiClientProvider&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To ensure that the correct client is used in the corresponding generated hooks, we will create our own hooks or rather extend the existing hooks with the client from the provider&amp;rsquo;s context. Therefore we create a &lt;code>CustomApolloHooks.ts&lt;/code> file in the &lt;code>codegen&lt;/code> folder and fill it with this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> &lt;span style="color:#c7bf54">*&lt;/span> &lt;span style="color:#c678dd">as&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">TaggedTemplateExpression&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;typescript&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">useApolloMultiClient&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;../ApolloMultiClientProvider&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8a93a5;font-style:italic">// Re-export everything else that has not been changed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8a93a5;font-style:italic">&lt;/span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c7bf54">*&lt;/span> &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@apollo/client&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8a93a5;font-style:italic">// For this example project we will limit the hooks to normal queries.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8a93a5;font-style:italic">// Here you would also add custom hooks for lazy queries, mutations, etc.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8a93a5;font-style:italic">&lt;/span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">function&lt;/span> &lt;span style="color:#c1abea">useQuery&lt;/span>&lt;span style="color:#c7bf54">&amp;lt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">TData&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#ef8383">any&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">TVariables&lt;/span> &lt;span style="color:#c678dd">extends&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">OperationVariables&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">OperationVariables&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c7bf54">&amp;gt;&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">query&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c7bf54">|&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">DocumentNode&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c7bf54">|&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">TypedDocumentNode&lt;/span>&amp;lt;&lt;span style="color:#e06c75">TaggedTemplateExpression&lt;/span>, &lt;span style="color:#b3d23c">TVariables&lt;/span>&amp;gt;,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">options?&lt;/span>: &lt;span style="color:#ef8383">Apollo.QueryHookOptions&lt;/span>&amp;lt;&lt;span style="color:#e06c75">TData&lt;/span>, &lt;span style="color:#b3d23c">TVariables&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">QueryResult&lt;/span>&amp;lt;&lt;span style="color:#e06c75">TData&lt;/span>, &lt;span style="color:#b3d23c">TVariables&lt;/span>&amp;gt; {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">ctx&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">useApolloMultiClient&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">client&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">ctx&lt;/span>.&lt;span style="color:#c1abea">getClient&lt;/span>(&lt;span style="color:#c1abea">options&lt;/span>&lt;span style="color:#c7bf54">?&lt;/span>.&lt;span style="color:#c1abea">context&lt;/span>&lt;span style="color:#c7bf54">?&lt;/span>.&lt;span style="color:#c1abea">clientName&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">newOptions&lt;/span>: &lt;span style="color:#ef8383">Apollo.QueryHookOptions&lt;/span>&amp;lt;&lt;span style="color:#e06c75">TData&lt;/span>, &lt;span style="color:#b3d23c">TVariables&lt;/span>&amp;gt; &lt;span style="color:#c7bf54">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#c1abea">options&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">client&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c678dd">return&lt;/span> &lt;span style="color:#c1abea">Apollo&lt;/span>.&lt;span style="color:#c1abea">useQuery&lt;/span>&amp;lt;&lt;span style="color:#e06c75">TData&lt;/span>, &lt;span style="color:#b3d23c">TVariables&lt;/span>&amp;gt;(&lt;span style="color:#c1abea">query&lt;/span>, &lt;span style="color:#c1abea">newOptions&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As already mentioned in the code comments, in this example we limit ourselves to the regular queries. In a final implementation, we would also create &lt;code>useMutation&lt;/code>, &lt;code>useLazyQuery&lt;/code>, etc. there and extend them with the client from the context.&lt;/p>
+&lt;p>In the next step you will see how we use these custom hooks in our code generation.&lt;/p>
+&lt;h3 id="add-and-update-graphql-code-generator-configurations">&lt;a href="#add-and-update-graphql-code-generator-configurations">Add and update GraphQL Code Generator Configurations&lt;/a>&lt;/h3>&lt;p>We have already laid the groundwork for both the provider and the hooks to handle multiple clients in principle. All that is missing now is the actual use of the custom hooks for the queries and additionally the differentiation between the APIs during GraphQL code generation.&lt;/p>
+&lt;p>This is done by using a suffix in the GraphQL filename. The main API (SpaceX) considers all files with the schema &lt;code>&amp;lt;filename&amp;gt;.graphql&lt;/code>. For the Star Wars API, however, we will be working with the &lt;code>&amp;lt;filename&amp;gt;.sw.graphql&lt;/code> schema.&lt;/p>
+&lt;p>Therefore, we need to add an exception to the &lt;code>documents&lt;/code> property in &lt;code>spacexConfig.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">documents&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [&lt;span style="color:#63c381">&amp;#34;src/**/*.graphql&amp;#34;&lt;/span>, &lt;span style="color:#63c381">&amp;#34;!src/**/*.sw.graphql&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Remember our own Apollo Hooks? Now is the time to add them to the SpaceX Config:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">generates&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.ts&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-operations&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-react-apollo&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">config&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">apolloReactHooksImportFrom&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#63c381">&amp;#34;../CustomApolloHooks&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.schema.json&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [&lt;span style="color:#63c381">&amp;#34;introspection&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>},
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For the Star Wars API we also need a configuration file. So we create the file &lt;code>starWarsConfig.ts&lt;/code> in the &lt;code>codegen&lt;/code> folder:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ts" data-lang="ts">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">CodegenConfig&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;@graphql-codegen/cli&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">import&lt;/span> { &lt;span style="color:#c1abea">API&lt;/span>, &lt;span style="color:#c1abea">starWarsURL&lt;/span> } &lt;span style="color:#c678dd">from&lt;/span> &lt;span style="color:#63c381">&amp;#34;../ApolloClients&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> &lt;span style="color:#c1abea">starWarsConfig&lt;/span>: &lt;span style="color:#ef8383">CodegenConfig&lt;/span> &lt;span style="color:#c7bf54">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">schema&lt;/span>: &lt;span style="color:#ef8383">starWarsURL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">documents&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#63c381">&amp;#34;src/**/*.sw.graphql&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">overwrite&lt;/span>: &lt;span style="color:#ef8383">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">generates&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/starwars.ts&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-operations&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;typescript-react-apollo&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">config&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">apolloReactHooksImportFrom&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> &lt;span style="color:#63c381">&amp;#34;../CustomApolloHooks&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">defaultBaseOptions&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">context&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">clientName&lt;/span>: &lt;span style="color:#ef8383">API.StarWars&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/starwars.schema.json&amp;#34;&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c1abea">plugins&lt;/span>&lt;span style="color:#c7bf54">:&lt;/span> [&lt;span style="color:#63c381">&amp;#34;introspection&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">export&lt;/span> &lt;span style="color:#c678dd">default&lt;/span> &lt;span style="color:#c1abea">starWarsConfig&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We also need to extend and tweak our scripts in &lt;code>package.json&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;update-graphql&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;npm run update-graphql:spacex &amp;amp; npm run update-graphql:starwars&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;update-graphql:spacex&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;graphql-codegen --config src/graphql/codegen/spacexConfig.ts&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;update-graphql:starwars&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;graphql-codegen --config src/graphql/codegen/starWarsConfig.ts&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We are almost there! Now we need to comment out the line concerning the &lt;code>documents&lt;/code> property in the Star Wars config and run the code generation for both APIs with &lt;code>npm run update-graphql&lt;/code>. This will update the existing query hook &lt;code>useGetAllDragons&lt;/code> to use the correct client and create the files &lt;code>starwars.schema.json&lt;/code> and &lt;code>starwars.ts&lt;/code> in the &lt;code>generated&lt;/code> directory.&lt;/p>
+&lt;p>Now we can update our &lt;code>.graphqlrc.json&lt;/code> file accordingly:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;projects&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;starwars&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;schema&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/starwars.schema.json&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;documents&amp;#34;&lt;/span>: [&lt;span style="color:#63c381">&amp;#34;src/**/*.sw.graphql&amp;#34;&lt;/span>, &lt;span style="color:#63c381">&amp;#34;src/generated/starwars.ts&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;exclude&amp;#34;&lt;/span>: [&lt;span style="color:#63c381">&amp;#34;src/generated/spacex.ts&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;spacex&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;schema&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;src/graphql/generated/spacex.schema.json&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;documents&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;src/**/*.graphql&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e06c75">&amp;#34;exclude&amp;#34;&lt;/span>: [&lt;span style="color:#63c381">&amp;#34;src/**/*.sw.graphql&amp;#34;&lt;/span>, &lt;span style="color:#63c381">&amp;#34;src/generated/starwars.ts&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As before, you will probably need to restart your IDE for the changes to take effect.&lt;/p>
+&lt;p>Finally, add the line for the &lt;code>documents&lt;/code> property back into the &lt;code>starWarsConfig.ts&lt;/code> file. Now we are ready to create a query for our Star Wars API!&lt;/p>
+&lt;h3 id="create-your-first-query-for-the-second-api">&lt;a href="#create-your-first-query-for-the-second-api">Create your first query for the second API&lt;/a>&lt;/h3>&lt;p>So here we go, we want to query some data from the Star Wars universe! Therefore we create the file &lt;code>GetAllPlanets.sw.graphql&lt;/code> in the &lt;code>src&lt;/code> directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-graphql" data-lang="graphql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">query&lt;/span> &lt;span style="color:#76a9f9">GetAllPlanets&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">allPlanets&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">planets&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">gravity&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#cebc3a">population&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When you try to enter field names manually here, you should get auto-completion and no overlap between the two APIs!&lt;/p>
+&lt;p>If the &lt;code>start&lt;/code> script is still running, the code should be generated automatically when the file is saved. Otherwise, restart the app with &lt;code>npm start&lt;/code>.&lt;/p>
+&lt;p>After that we can use the newly created query in the &lt;code>App.tsx&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c678dd">const&lt;/span> { &lt;span style="color:#c1abea">data&lt;/span>: &lt;span style="color:#ef8383">planets&lt;/span> } &lt;span style="color:#c7bf54">=&lt;/span> &lt;span style="color:#c1abea">useGetAllPlanetsQuery&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">console&lt;/span>.&lt;span style="color:#c1abea">log&lt;/span>(&lt;span style="color:#c1abea">planets&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Yeah! Now we can query data from two completely different APIs and get automated code generation for changes to the GraphQL API and hooks for our GraphQL operations at the same time.&lt;/p>
+&lt;h2 id="add-a-third-apollo-client-maybe">&lt;a href="#add-a-third-apollo-client-maybe">Add a third Apollo Client (maybe?)&lt;/a>&lt;/h2>&lt;p>In my example project on &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/stffffn/react-multiple-apollo-clients"
+aria-label="React Multiple Apollo Clients" title="React Multiple Apollo Clients"
+>GitHub&lt;/a
+>, I also created a third Apollo Client to demonstrate that this is not just a solution for two different APIs, but works with any number of clients.&lt;/p>
+&lt;p>I won&amp;rsquo;t go into the details of integrating a third API at this point, &lt;del>as this post is already way too long already&lt;/del> as it&amp;rsquo;s more or less exactly the same process as for the second client.&lt;/p>
+&lt;p>Therefore a short summary:&lt;/p>
+&lt;ol>
+&lt;li>Add a third client to &lt;code>ApolloClients.ts&lt;/code>.&lt;/li>
+&lt;li>Add the client to &lt;code>ApolloMultiClientProvider.tsx&lt;/code>&lt;/li>
+&lt;li>Create a new GraphQL Code Generator configuration in &lt;code>codegen&lt;/code>
+&lt;ul>
+&lt;li>Don&amp;rsquo;t forget to add the custom hooks and the corresponding client name in the configuration&lt;/li>
+&lt;li>Also don&amp;rsquo;t forget to extend the file exceptions for the new suffix in the already existing configs. It should follow the scheme of &lt;code>&amp;lt;filename&amp;gt;.&amp;lt;suffix&amp;gt;.graphql&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Comment out the part about the &lt;code>documents&lt;/code> property and run the code generation&lt;/li>
+&lt;li>Extend the &lt;code>.graphqlrc.json&lt;/code> file according to the newly generated files and don&amp;rsquo;t forget to add exceptions to the existing entries&lt;/li>
+&lt;li>Add the &lt;code>documents&lt;/code> part back to the config again&lt;/li>
+&lt;li>Create a new query&lt;/li>
+&lt;li>The code generation should run automatically and you can now use the corresponding query hook as before&lt;/li>
+&lt;/ol>
+&lt;h2 id="conclusion">&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/h2>&lt;p>That was quite an effort, wasn&amp;rsquo;t it? Well, that&amp;rsquo;s definitely true, but isn&amp;rsquo;t that the case with all initial setups? The initial effort is always a bit more, but we benefit from it in the long run!&lt;/p>
+&lt;p>We can now easily include as many Apollo Clients as we want and thus address as many GraphQL APIs as our hearts desire. In addition, we have the luxury of automated code generation, which always provides us with any changes to the GraphQL API and creates typed hooks for newly created or changed GraphQL operations.&lt;/p>
+&lt;p>Happy querying!&lt;/p></description></item></channel></rss>

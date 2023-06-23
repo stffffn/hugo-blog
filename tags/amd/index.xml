@@ -1,1 +1,83 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AMD on Bla Bli Blog</title><link>https://blabli.blog/tags/amd/</link><description>Recent content in AMD on Bla Bli Blog</description><language>en-US</language><lastBuildDate>Tue, 14 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/amd/index.xml" rel="self" type="application/rss+xml"/><item><title>NixOS + AMD Raphael iGPU: Fix for white/flashing Screens and a Guide for Graphical Installation</title><link>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</link><guid>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</guid><pubDate>Tue, 14 Mar 2023 00:00:00 +0000</pubDate><description>How to fix white or flashing screens in NixOS when using the iGPU of an AMD Ryzen 7000 series CPU (Raphael).</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AMD on Bla Bli Blog</title><link>https://blabli.blog/tags/amd/</link><description>The personal blog of stffffn</description><language>en-US</language><lastBuildDate>Tue, 14 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/amd/index.xml" rel="self" type="application/rss+xml"/><item><title>NixOS + AMD Raphael iGPU: Fix for white/flashing Screens and a Guide for Graphical Installation</title><link>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</link><guid>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</guid><pubDate>Tue, 14 Mar 2023 00:00:00 +0000</pubDate><description>&lt;div class="alert alert-update">
+&lt;h3>Update&lt;/h3>
+&lt;p>The fix is now also available as a module in &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/amd/raphael/igpu.nix"
+>nixos-hardware&lt;/a
+>&lt;/p>
+&lt;/div>
+&lt;p>This post has a tl;dr section just for the necessary changes to get the integrated GPU (iGPU) working and fix the screen issues, a short write-up of my experience, with some additional links for further information and at the end you&amp;rsquo;ll find a condensed guide for the graphical installation process.&lt;/p>
+&lt;h2 id="tldr">&lt;a href="#tldr">tl;dr&lt;/a>&lt;/h2>&lt;p>To be able to use the integrated graphics of your Ryzen 7000-series CPU you can either&amp;hellip;&lt;/p>
+&lt;ul>
+&lt;li>use the 6.1 kernel:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelPackages&lt;/span> = &lt;span style="color:#c1abea">pkgs&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">linuxPackages_6_1&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>or use the latest kernel, which also needs an additional kernel parameter to fix the white or flashing screen issues:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelPackages&lt;/span> = &lt;span style="color:#c1abea">pkgs&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">linuxPackages_latest&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelParams&lt;/span> = [&lt;span style="color:#63c381">&amp;#34;amdgpu.sg_display=0&amp;#34;&lt;/span>];
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Well, at least both solutions worked for me.&lt;br>
+Tested with LightDM + XFCE, SDDM + KDE Plasma, GDM + GNOME.&lt;/p>
+&lt;h2 id="my-experience">&lt;a href="#my-experience">My experience&lt;/a>&lt;/h2>&lt;p>A week ago I built a new desktop PC including an AMD Ryzen 7950x. For the time being I use its iGPU to run my 32&amp;quot; 4k monitor (LG 32BN67U-B) via HDMI.&lt;/p>
+&lt;p>At the time of writing this post, the current NixOS version is 22.11, which comes with the 5.15 Linux kernel. Support for the iGPU of the new AMD Ryzen 7000 series CPUs (Raphael) comes with a later version of the kernel (5.18). Therefore, the issues aren&amp;rsquo;t specific to NixOS, but affect any Linux distribution that comes with a kernel that is too old.&lt;/p>
+&lt;p>To use the latest kernel (6.2) in NixOS I added &lt;code>boot.kernelPackages = pkgs.linuxPackages_latest&lt;/code> to the &lt;code>configuration.nix&lt;/code> file.&lt;/p>
+&lt;p>Without any changes I booted straight to tty after the installation. With the latest kernel I was able to boot into LightDM and log into XFCE. Unfortunately, after rebooting, XFCE was flashing at my native resolution of 3840x2160. Reducing the resolution to 2560x1440 stopped the flashing.&lt;/p>
+&lt;p>With SDDM + KDE Plasma and GDM + GNOME, I wasn&amp;rsquo;t even able to see the display manager and was greeted with a white screen and my cursor.&lt;/p>
+&lt;p>That means the latest kernel fixes only half the problem. After I tried a quick installation of Arch and experienced the exact same issues, I did some research and stumbled upon this issue on the GitLab instance of freedesktop.org: &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://gitlab.freedesktop.org/drm/amd/-/issues/2354"
+aria-label="Flickering or constant solid white screen with kernel &amp;gt;=6.1.4" title="Flickering or constant solid white screen with kernel &amp;gt;=6.1.4"
+>Flickering or constant solid white screen with kernel &amp;gt;=6.1.4&lt;/a
+>&lt;/p>
+&lt;p>In the comments, &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://gitlab.freedesktop.org/drm/amd/-/issues/2354#note_1765479"
+aria-label="Flickering or constant solid white screen with kernel &amp;gt;=6.1.4" title="Flickering or constant solid white screen with kernel &amp;gt;=6.1.4"
+>user yswtrue suggested&lt;/a
+> to use the kernel parameter &lt;code>amdgpu.sg_display=0&lt;/code>. Searching for this parameter I found &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://www.phoronix.com/news/AMD-Scatter-Gather-Re-Enabled"
+aria-label="AMD Re-Enables Scatter/Gather Support For All APUs On Linux" title="AMD Re-Enables Scatter/Gather Support For All APUs On Linux"
+>this post on Phoronix&lt;/a
+>, which references said GitLab issue and gives further background information on the problem.&lt;/p>
+&lt;p>So, adding &lt;code>boot.kernelParams = [&amp;quot;amdgpu.sg_display=0&amp;quot;]&lt;/code> to &lt;code>configuration.nix&lt;/code> also fixed the problem with a flashing screen in XFCE and the white screen in SDDM + KDE Plasma and GDM + Gnome.&lt;/p>
+&lt;p>As stated in the Phoronix article, AMD introduced the relevant changes in kernel version 6.2.&lt;br>
+Therefore, kernel version 6.1 would be another solution without the need for a kernel parameter:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelPackages&lt;/span> = &lt;span style="color:#c1abea">pkgs&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">linuxPackages_6_1&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Yes, the GitLab issue speaks of kernel versions 6.1.4 or higher to be affected, but I tested it with 6.1.16 (that&amp;rsquo;s what NixOS installs automatically with the line above) and it worked for me.&lt;/p>
+&lt;p>I also tested the mainline kernel version 6.3-rc1 and unfortunately this version still needed the additional kernel parameter.&lt;/p>
+&lt;p>Personally I&amp;rsquo;ll use the latest kernel, since there should be more changes and improvements in kernel 6.2 regarding AMD Raphael.&lt;/p>
+&lt;p>I&amp;rsquo;m really looking forward to using NixOS. I love the idea of the declarative approach, which already made this whole troubleshooting and experimenting process so much more comfortable for me.&lt;/p>
+&lt;h2 id="installation-guide">&lt;a href="#installation-guide">Installation guide&lt;/a>&lt;/h2>&lt;ol>
+&lt;li>Pick the second option with &lt;code>nomodeset&lt;/code> to get the installer up and running&lt;/li>
+&lt;li>Follow the installation process and reboot at the end&lt;/li>
+&lt;li>After the reboot you&amp;rsquo;ll be booted straight into tty&lt;/li>
+&lt;li>Login with your user&lt;/li>
+&lt;li>Open the configuration file, e.g.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo nano ../../etc/nixos/configuration.nix
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
+&lt;li>Add one of the following solutions to your configuration:&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>If you want to go with the latest kernel:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelPackages&lt;/span> = &lt;span style="color:#c1abea">pkgs&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">linuxPackages_latest&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelParams&lt;/span> = [&lt;span style="color:#63c381">&amp;#34;amdgpu.sg_display=0&amp;#34;&lt;/span>];
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>If you want to stick with kernel 6.1:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#c1abea">boot&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">kernelPackages&lt;/span> = &lt;span style="color:#c1abea">pkgs&lt;/span>&lt;span style="color:#c7bf54">.&lt;/span>&lt;span style="color:#c1abea">linuxPackages_6_1&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
+&lt;li>Rebuild with&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo nixos-rebuild switch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="8">
+&lt;li>Reboot after the rebuild is finished&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="9">
+&lt;li>Pick the newest generation&lt;/li>
+&lt;li>Now you should be able to boot into your display manager and log into your desktop environment&lt;/li>
+&lt;/ol></description></item></channel></rss>

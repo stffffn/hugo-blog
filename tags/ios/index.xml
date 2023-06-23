@@ -1,1 +1,113 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>iOS on Bla Bli Blog</title><link>https://blabli.blog/tags/ios/</link><description>Recent content in iOS on Bla Bli Blog</description><language>en-US</language><lastBuildDate>Mon, 19 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/ios/index.xml" rel="self" type="application/rss+xml"/><item><title>How to trigger iOS Login Autofill for a local React Project</title><link>https://blabli.blog/post/2023/06/19/ios-autofill-react/</link><guid>https://blabli.blog/post/2023/06/19/ios-autofill-react/</guid><pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate><description>How to trigger the automatic iOS Login Autofill for a locally running React Project.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>iOS on Bla Bli Blog</title><link>https://blabli.blog/tags/ios/</link><description>The personal blog of stffffn</description><language>en-US</language><lastBuildDate>Mon, 19 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/ios/index.xml" rel="self" type="application/rss+xml"/><item><title>How to trigger iOS Login Autofill for a local React Project</title><link>https://blabli.blog/post/2023/06/19/ios-autofill-react/</link><guid>https://blabli.blog/post/2023/06/19/ios-autofill-react/</guid><pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate><description>&lt;p>I once had to debug a problem for a React project that was a side effect of the automatic iOS login autofill. Triggering the iOS autofill for a locally running React project wasn&amp;rsquo;t quite straightforward, so I wanted to document my findings in this blog post.&lt;/p>
+&lt;h2 id="tlddr">&lt;a href="#tlddr">tld;dr&lt;/a>&lt;/h2>&lt;p>You need an https connection with a valid SSL certificate or it won&amp;rsquo;t work.&lt;/p>
+&lt;p>How to do this is explained below.&lt;/p>
+&lt;h2 id="intro">&lt;a href="#intro">Intro&lt;/a>&lt;/h2>&lt;p>Safari on iOS offers autofill for login forms if you have the login information stored in your keychain.&lt;/p>
+&lt;p>However, autofill is only triggered automatically if you have a secure connection (https) with a valid SSL certificate. Otherwise, autofill is offered, but only if you click on the corresponding input field yourself.&lt;/p>
+&lt;p>The motto seems to be: We only offer it to you automatically if it is really secure, otherwise you do it consciously on your own responsibility.&lt;/p>
+&lt;div class="alert alert-info">
+&lt;h3>Real Device &amp;amp; Simulator&lt;/h3>
+&lt;p>It works both with a real iOS device as well as with the simulator available on macOS.&lt;/p>
+&lt;/div>
+&lt;h2 id="save-login-data-on-ios">&lt;a href="#save-login-data-on-ios">Save login data on iOS&lt;/a>&lt;/h2>&lt;p>As already mentioned, the autofill can only be triggered if the login data for the matching URL has been saved. Therefore, I want like to document the creation of this data at the beginning, as we will refer to it in the process.&lt;/p>
+&lt;p>The procedure is similar for a real device and the simulator:&lt;/p>
+&lt;ol>
+&lt;li>Open the &amp;ldquo;Settings&amp;rdquo; app&lt;/li>
+&lt;li>Go to &amp;ldquo;Passwords&amp;rdquo;&lt;/li>
+&lt;li>Real: Enter the device password
+Simulator: Enter anything&lt;/li>
+&lt;li>Enable &amp;ldquo;Autofill Passwords&amp;rdquo;&lt;/li>
+&lt;li>Add a new entry with the + symbol&lt;/li>
+&lt;li>For &amp;ldquo;Website&amp;rdquo; insert the corresponding URL&lt;/li>
+&lt;li>Fill in &amp;ldquo;User Name&amp;rdquo; and &amp;ldquo;Password&amp;rdquo; according to the user data&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-did-not-work">&lt;a href="#what-did-not-work">What did not work&lt;/a>&lt;/h2>&lt;p>Since I can well imagine that some people will come up with similar ideas to mine when reading this post, I have also documented all the variants I tried that did not work, for the sake of completeness. So you don&amp;rsquo;t have to do that anymore!&lt;/p>
+&lt;p>In the beginning, I tried to see if the autofill would work simply via localhost or the corresponding IP in the network, but that didn&amp;rsquo;t work. I made some assumptions about this below.&lt;/p>
+&lt;h3 id="url-restrictions">&lt;a href="#url-restrictions">URL restrictions&lt;/a>&lt;/h3>&lt;ul>
+&lt;li>A &lt;code>localhost&lt;/code> address cannot be saved manually via the settings. It can only be saved via the context menu at a new login.&lt;/li>
+&lt;li>However, an IP can be entered manually&lt;/li>
+&lt;/ul>
+&lt;h3 id="connections-without-https">&lt;a href="#connections-without-https">Connections without https&lt;/a>&lt;/h3>&lt;h4 id="customizing-the-etchosts-file">&lt;a href="#customizing-the-etchosts-file">Customizing the &lt;code>/etc/hosts&lt;/code> file&lt;/a>&lt;/h4>&lt;ul>
+&lt;li>Assumption: An IP is not accepted for the autofill (although you could create the login data manually).&lt;/li>
+&lt;li>E.g. from &lt;code>127.0.0.1 localhost&lt;/code> to &lt;code>127.0.0.1 thisisafakedomain.com&lt;/code>&lt;/li>
+&lt;li>Calling the page (&lt;code>thisisafakedomain.com:3000&lt;/code>) works fine, but autofill is still not triggered&lt;/li>
+&lt;/ul>
+&lt;h4 id="starting-the-app-on-port-80-http">&lt;a href="#starting-the-app-on-port-80-http">Starting the app on port 80 (http)&lt;/a>&lt;/h4>&lt;ul>
+&lt;li>Assumption: A domain with port specification is not accepted for autofill (although you could create the login data manually).&lt;/li>
+&lt;li>Background: Port 80 is reserved for http, so you don&amp;rsquo;t need to specify the port anymore. So instead of &lt;code>thisisafakedomain.com:3000&lt;/code> you can simply call &lt;code>thisisafakedomain.com&lt;/code>.&lt;/li>
+&lt;li>It can be started with &lt;code>sudo PORT=80 npm run serve&lt;/code>.&lt;/li>
+&lt;li>Calling the page works fine, but autofill is still not triggered&lt;/li>
+&lt;/ul>
+&lt;h4 id="hypothesis">&lt;a href="#hypothesis">Hypothesis&lt;/a>&lt;/h4>&lt;p>Since neither an IP nor the additional specification of a port in a URL can be responsible for this, only the insecure connection (http instead of https) remains after the exclusion procedure due to the lack of an SSL certificate.&lt;/p>
+&lt;h2 id="what-worked">&lt;a href="#what-worked">What worked&lt;/a>&lt;/h2>&lt;h3 id="tunneling-services">&lt;a href="#tunneling-services">Tunneling Services&lt;/a>&lt;/h3>&lt;p>To avoid going straight back into some configuration cave, I first tried Tunneling Services to test my hypothesis.&lt;/p>
+&lt;h4 id="ngrok">&lt;a href="#ngrok">ngrok&lt;/a>&lt;/h4>&lt;p>I tested &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://ngrok.com/"
+aria-label="ngrok" title="ngrok"
+>ngrok&lt;/a
+> first. It worked right out of the box and the free tier allows non-commercial use. If you want to use it in a commercial project, you have to use one of the paid tiers.&lt;/p>
+&lt;h4 id="localtunnel">&lt;a href="#localtunnel">Localtunnel&lt;/a>&lt;/h4>&lt;p>Now it is clear that a tunneling service works. During a short research I stumbled upon &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://theboroer.github.io/localtunnel-www/"
+aria-label="Localtunnel" title="Localtunnel"
+>Localtunnel&lt;/a
+>, which also worked right out of the box.&lt;/p>
+&lt;p>Localtunnel can also be installed on macOS via &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://formulae.brew.sh/formula/localtunnel#default"
+aria-label="Homebrew localtunnel" title="Homebrew localtunnel"
+>Homebrew&lt;/a
+>.&lt;/p>
+&lt;p>Just start the React app and start the tunnel with &lt;code>lt --port 3000&lt;/code> (or whatever port your React app is running on). The terminal will provide a URL that allows you to access the local application from anywhere and still make local changes to the code.&lt;/p>
+&lt;h4 id="how-to-tunnel-service">&lt;a href="#how-to-tunnel-service">How to Tunnel Service&lt;/a>&lt;/h4>&lt;ol>
+&lt;li>Start your app&lt;/li>
+&lt;li>Launch your tunnel service&lt;/li>
+&lt;li>Follow the instructions to create login data and use the corresponding URL provided by your tunnel service&lt;/li>
+&lt;li>Open this URL with Safari (make sure that the URL is also opened with https!)&lt;/li>
+&lt;li>You should be greeted directly by the native iOS autofill context menu on your login page&lt;/li>
+&lt;li>Happy debugging!&lt;/li>
+&lt;/ol>
+&lt;h3 id="local-ssl-certificate">&lt;a href="#local-ssl-certificate">Local SSL certificate&lt;/a>&lt;/h3>&lt;p>If you do not want to use a tunneling service, a local SSL certificate is another alternative.&lt;/p>
+&lt;div class="alert alert-info">
+&lt;h3>Follow along&lt;/h3>
+&lt;p>If you want to follow the next steps directly, I&amp;rsquo;ve provided a super simple React project on &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/stffffn/ios-autofill-test"
+>GitHub&lt;/a
+> with a dummy login form.&lt;/p>
+&lt;/div>
+&lt;h4 id="create-the-certificate">&lt;a href="#create-the-certificate">Create the certificate&lt;/a>&lt;/h4>&lt;p>You can use &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://github.com/FiloSottile/mkcert"
+aria-label="GitHub mkcert" title="GitHub mkcert"
+>mkcert&lt;/a
+> to create locally valid certificates. For macOS, it can be installed via &lt;a
+target="_blank" rel="noopener noreferrer"
+href="https://formulae.brew.sh/formula/mkcert#default"
+aria-label="Homebrew mkcert" title="Homebrew mkcert"
+>Homebrew&lt;/a
+>, for example.&lt;/p>
+&lt;p>After the installation we first create a Local Certificate Authority, which creates a root certificate and a key.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mkcert -install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we need to create the necessary certificates for our React project. The best way to do this is to navigate to the root directory of your React project and create a &lt;code>certificate&lt;/code> folder there, for example with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir certificate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkcert -key-file ./certificate/key.pem -cert-file ./certificate/cert.pem localhost &lt;span style="color:#c678dd">$(&lt;/span>ifconfig | grep &lt;span style="color:#98c379">&amp;#39;inet &amp;#39;&lt;/span> | grep -Fv 127.0.0.1 | awk &lt;span style="color:#98c379">&amp;#39;NR==1{print $2}&amp;#39;&lt;/span>&lt;span style="color:#c678dd">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command creates the private key and a certificate valid for &lt;code>localhost&lt;/code> and the IP of your device on the local network.&lt;/p>
+&lt;p>Now we need to add a script to the &lt;code>package.json&lt;/code> file to be able to start the app with https and the corresponding certificate as well:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#63c381">&amp;#34;start:https&amp;#34;&lt;/span>: &lt;span style="color:#63c381">&amp;#34;HTTPS=true SSL_CRT_FILE=./certificate/cert.pem SSL_KEY_FILE=./certificate/key.pem npm run start&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="install-the-root-certificate-on-ios">&lt;a href="#install-the-root-certificate-on-ios">Install the root certificate on iOS&lt;/a>&lt;/h4>&lt;p>Now we just need to tell iOS to trust our Local Certificate Authority.&lt;/p>
+&lt;p>In this case, I will limit myself to the macOS simulator. The installation on a real device is identical, only the way how you get the root certificate on your device is a bit different and up to you (Airdrop, Email, NAS, etc.).&lt;/p>
+&lt;p>If you don&amp;rsquo;t remember where the root certificate was created, you can find it out with this command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#b0c4de;background-color:#282c34;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkcert -CAROOT
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Under macOS it is most likely located under &lt;code>/Users/&amp;lt;YourUsername&amp;gt;/Library/Application Support/mkcert&lt;/code> and is named &lt;code>rootCA.pem&lt;/code>.&lt;/p>
+&lt;p>Unfortunately, with the latest restrictions on macOS, it is no longer possible to drag and drop certificates onto the simulator. However, we can still install it relatively easily via the path. If your root certificate is located under the same path, you can copy the following link and paste it into Safari (don&amp;rsquo;t forget to change the username!): &lt;code>file:///Users/&amp;lt;YourUsername&amp;gt;/Library/Application%20Support/mkcert/rootCA.pem&lt;/code>&lt;/p>
+&lt;p>You will see a dialog asking you, if you want to allow the download of a configuration file. Click &amp;ldquo;Allow&amp;rdquo;. After that, You will then see a message indicating that the profile has been downloaded.&lt;/p>
+&lt;p>Then open the &amp;ldquo;Settings&amp;rdquo; app, navigate to &amp;ldquo;General&amp;rdquo; and then to &amp;ldquo;Device Management. The certificate will already be listed there. Click on it and install it.&lt;/p>
+&lt;p>That&amp;rsquo;s all we needed to do on iOS.&lt;/p>
+&lt;h4 id="start-the-react-app">&lt;a href="#start-the-react-app">Start the React app&lt;/a>&lt;/h4>&lt;p>Now we start the React app with the &lt;code>npm run start:https&lt;/code> script we created earlier.&lt;/p>
+&lt;p>Then we take our iOS device or the simulator, open the &amp;ldquo;Settings&amp;rdquo; app, navigate to &amp;ldquo;Passwords&amp;rdquo; and add an entry for the corresponding IP. Don&amp;rsquo;t forget to add &amp;ldquo;https://&amp;rdquo; and the port at the end. If you are using my GitHub project as a test, just enter anything for the username and password.&lt;/p>
+&lt;p>Now we can open the website directly from the password details page and should be greeted by the automatically triggered iOS autofill. Done!&lt;/p>
+&lt;p>Here is a short demo video:&lt;/p>
+&lt;video preload="metadata" controls="true">
+&lt;source src="https://blabli.blog/images/autofill/autofill.mp4#t=0.001" type="video/mp4" />
+Your browser does not support the video tag.
+&lt;/video></description></item></channel></rss>
