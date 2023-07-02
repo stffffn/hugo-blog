@@ -91,6 +91,12 @@
       sizes="196x196"
       href="/favicons/favicon-196.png" />
 
+    <!-- Workaround to avoid rare occasions of FOUC -->
+    <style>
+      html {
+        visibility: hidden;
+      }
+    </style>
     <!-- CSS -->
     {{ $styles := resources.Get "scss/styles.scss" | resources.ToCSS }}
     <link rel="stylesheet" href="{{ $styles.Permalink }}" />

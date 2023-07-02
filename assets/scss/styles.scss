@@ -14,6 +14,7 @@ $smallText: 0.875rem;
 html {
   height: -webkit-fill-available;
   scroll-behavior: smooth;
+  visibility: visible;
 }
 
 body {
@@ -74,7 +75,7 @@ a {
   text-decoration: none;
   transition: ease-in-out;
   transition-duration: 0.2s;
-  transition-property: color, background-color;
+  transition-property: color;
 
   &:hover {
     color: $highlightColor;
