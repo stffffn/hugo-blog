@@ -1,6 +1,7 @@
 html {
   height: -webkit-fill-available;
-  scroll-behavior: smooth; }
+  scroll-behavior: smooth;
+  visibility: visible; }
 
 body {
   display: flex;
@@ -48,7 +49,7 @@ a {
   text-decoration: none;
   transition: ease-in-out;
   transition-duration: 0.2s;
-  transition-property: color, background-color; }
+  transition-property: color; }
   a:hover {
     color: #5496ff; }
 
