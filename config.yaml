@@ -12,13 +12,18 @@ menu:
   main:
     - identifier: tags
       name: Tags
-      url: /tags/
+      url: /tags
       weight: 1
       pre: <i class="fa-solid fa-hashtag"></i>
+    - identifier: mate-rating
+      name: Mate Rating
+      url: /mate-rating
+      weight: 2
+      pre: <i class="fa-solid fa-bottle-droplet"></i>
     - identifier: rss
       name: RSS
       url: /index.xml
-      weight: 2
+      weight: 3
       pre: <i class="fa-solid fa-square-rss"></i>
   social:
     - identifier: github
@@ -30,9 +35,12 @@ menu:
       url: https://mastodon.social/@stffffn
       pre: <i class="fa-brands fa-mastodon"></i>
 permalinks:
-  posts: "post/:year/:month/:day/:slug/"
+  posts: "post/:year/:month/:day/:slug"
 markup:
   tableOfContents:
     endLevel: 4
   highlight:
     style: "doom-one"
+  goldmark:
+    renderer:
+      unsafe: true

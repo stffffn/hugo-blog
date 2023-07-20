@@ -1,0 +1,15 @@
+{{ $rating := .Get "rating" }}
+<li class="mate">
+  {{ .Get "name" }}:
+  <span class="mate-rating">
+    {{ range seq (math.Floor $rating) }}
+      <i class="fa-solid fa-star"></i>
+    {{ end }}
+    {{ if hasSuffix $rating ".5" }}
+      <i class="fa-regular fa-star-half-stroke"></i>
+    {{ end }}
+    {{ range seq (sub 5 (math.Round $rating)) }}
+      <i class="fa-regular fa-star"></i>
+    {{ end }}
+  </span>
+</li>
