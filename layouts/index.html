@@ -1,6 +1,6 @@
 {{ define "main" }}
   <main>
-    {{ range .Site.RegularPages }}
+    {{ range where .Site.RegularPages "Type" "posts" }}
       <div class="post-entry post-info">
         <h2>
           <a
