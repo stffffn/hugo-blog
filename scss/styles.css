@@ -224,3 +224,10 @@ i {
     padding-left: 2.875rem; }
   .toc li > ul {
     padding-left: 1.5rem; }
+
+.mate {
+  margin: 0.75rem 0;
+  font-weight: bold; }
+  .mate-rating {
+    display: inline-flex;
+    color: #eaea4e; }
