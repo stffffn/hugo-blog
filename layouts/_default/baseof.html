@@ -100,18 +100,6 @@
     <!-- CSS -->
     {{ $styles := resources.Get "scss/styles.scss" | resources.ToCSS }}
     <link rel="stylesheet" href="{{ $styles.Permalink }}" />
-    <link
-      href="{{ "fontawesome/css/fontawesome.min.css" | relURL }}"
-      rel="stylesheet" />
-    <link
-      href="{{ "fontawesome/css/brands.min.css" | relURL }}"
-      rel="stylesheet" />
-    <link
-      href="{{ "fontawesome/css/solid.min.css" | relURL }}"
-      rel="stylesheet" />
-    <link
-      href="{{ "fontawesome/css/regular.min.css" | relURL }}"
-      rel="stylesheet" />
   </head>
   <body>
     {{ partial "header" . }}

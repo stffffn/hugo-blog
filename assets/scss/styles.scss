@@ -43,8 +43,20 @@ header {
     color: $primaryColor;
   }
 
-  .menu-item:not(:last-child) {
-    margin-right: 0.75rem;
+  nav {
+    display: flex;
+  }
+
+  .menu-item {
+    display: inline-flex;
+
+    &:not(:last-child) {
+      margin-right: 0.75rem;
+    }
+
+    svg:hover {
+      fill: $highlightColor;
+    }
   }
 }
 
@@ -63,6 +75,11 @@ footer {
   font-size: $smallText;
   color: $secondaryColor;
 
+  a {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
   > div {
     display: flex;
     flex-wrap: wrap;
@@ -79,15 +96,13 @@ a {
   }
 }
 
-i {
-  font-size: $icon;
+.icon {
+  height: $icon;
+  min-width: $icon;
+  fill: $primaryColor;
 }
 
 .tag {
-  &-headline {
-    margin-top: 0;
-  }
-
   &-overview {
     display: flex;
     flex-wrap: wrap;
@@ -161,9 +176,7 @@ i {
 
           &::after {
             margin-left: 0.5rem;
-            vertical-align: top;
-            font-family: "Font Awesome 6 Free";
-            content: "\f0c1";
+            content: "#";
           }
         }
       }
@@ -272,12 +285,12 @@ i {
   }
 
   h3 {
+    display: inline-flex;
+    align-items: center;
     margin-bottom: 0.5rem;
 
-    &::before {
+    svg {
       margin-right: 0.5rem;
-      display: inline-block;
-      font-family: "Font Awesome 6 Free";
     }
   }
 
@@ -285,8 +298,8 @@ i {
     color: #c4e4f4;
     background-color: #3e6071;
 
-    h3::before {
-      content: "\f0eb";
+    svg {
+      fill: #c4e4f4;
     }
   }
 
@@ -294,8 +307,8 @@ i {
     color: #b0f0b0;
     background-color: #3f663f;
 
-    h3::before {
-      content: "\f05a";
+    svg {
+      fill: #b0f0b0;
     }
   }
 
@@ -303,8 +316,8 @@ i {
     color: #ec9ea6;
     background-color: #75272f;
 
-    h3::before {
-      content: "\f071";
+    svg {
+      fill: #ec9ea6;
     }
   }
 }
@@ -351,6 +364,13 @@ i {
 
   &-rating {
     display: inline-flex;
-    color: #eaea4e;
+
+    svg {
+      fill: #eaea4e;
+    }
   }
+}
+
+.heading {
+  margin-top: 0;
 }
