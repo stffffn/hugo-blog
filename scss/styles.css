@@ -23,8 +23,14 @@ header {
   padding-top: 1rem; }
   header a {
     color: #e0e0e0; }
-  header .menu-item:not(:last-child) {
-    margin-right: 0.75rem; }
+  header nav {
+    display: flex; }
+  header .menu-item {
+    display: inline-flex; }
+    header .menu-item:not(:last-child) {
+      margin-right: 0.75rem; }
+    header .menu-item svg:hover {
+      fill: #5496ff; }
 
 main {
   flex: 1;
@@ -39,6 +45,9 @@ footer {
   padding-bottom: 1rem;
   font-size: 0.875rem;
   color: #a2a2a2; }
+  footer a {
+    text-decoration: underline;
+    text-decoration-style: dotted; }
   footer > div {
     display: flex;
     flex-wrap: wrap;
@@ -50,11 +59,10 @@ a {
   a:hover {
     color: #5496ff; }
 
-i {
-  font-size: 1.125rem; }
-
-.tag-headline {
-  margin-top: 0; }
+.icon {
+  height: 1.125rem;
+  min-width: 1.125rem;
+  fill: #e0e0e0; }
 
 .tag-overview {
   display: flex;
@@ -113,9 +121,7 @@ i {
       .post-content h3 a:hover::after,
       .post-content h4 a:hover::after {
         margin-left: 0.5rem;
-        vertical-align: top;
-        font-family: "Font Awesome 6 Free";
-        content: "\f0c1"; }
+        content: "#"; }
   .post-content a {
     color: #5496ff; }
     .post-content a:hover {
@@ -183,26 +189,26 @@ i {
   .alert p {
     margin: 0; }
   .alert h3 {
+    display: inline-flex;
+    align-items: center;
     margin-bottom: 0.5rem; }
-    .alert h3::before {
-      margin-right: 0.5rem;
-      display: inline-block;
-      font-family: "Font Awesome 6 Free"; }
+    .alert h3 svg {
+      margin-right: 0.5rem; }
   .alert-info {
     color: #c4e4f4;
     background-color: #3e6071; }
-    .alert-info h3::before {
-      content: "\f0eb"; }
+    .alert-info svg {
+      fill: #c4e4f4; }
   .alert-update {
     color: #b0f0b0;
     background-color: #3f663f; }
-    .alert-update h3::before {
-      content: "\f05a"; }
+    .alert-update svg {
+      fill: #b0f0b0; }
   .alert-error {
     color: #ec9ea6;
     background-color: #75272f; }
-    .alert-error h3::before {
-      content: "\f071"; }
+    .alert-error svg {
+      fill: #ec9ea6; }
 
 .toc {
   margin: 1rem 0;
@@ -229,5 +235,9 @@ i {
   margin: 0.75rem 0;
   font-weight: bold; }
   .mate-rating {
-    display: inline-flex;
-    color: #eaea4e; }
+    display: inline-flex; }
+    .mate-rating svg {
+      fill: #eaea4e; }
+
+.heading {
+  margin-top: 0; }

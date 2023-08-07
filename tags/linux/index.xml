@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Bla Bli Blog</title><link>https://blabli.blog/tags/linux/</link><description>The personal blog of stffffn</description><language>en-US</language><lastBuildDate>Tue, 14 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>NixOS + AMD Raphael iGPU: Fix for white/flashing Screens and a Guide for Graphical Installation</title><link>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</link><guid>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</guid><pubDate>Tue, 14 Mar 2023 00:00:00 +0000</pubDate><description>&lt;div class="alert alert-update">
-&lt;h3>Update&lt;/h3>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Bla Bli Blog</title><link>https://blabli.blog/tags/linux/</link><description>The personal blog of stffffn</description><language>en-US</language><lastBuildDate>Tue, 14 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blabli.blog/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>NixOS + AMD Raphael iGPU: Fix for white/flashing Screens and a Guide for Graphical Installation</title><link>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</link><guid>https://blabli.blog/post/2023/03/14/nixos-amd-raphael-igpu-screen-issues/</guid><pubDate>Tue, 14 Mar 2023 00:00:00 +0000</pubDate><description>
+&lt;div class="alert alert-update">
+&lt;h3>
+&lt;svg
+class="icon"
+xmlns="http://www.w3.org/2000/svg"
+viewBox="0 0 512 512">
+&lt;path
+d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
+&lt;/svg>
+Update
+&lt;/h3>
 &lt;p>The fix is now also available as a module in &lt;a
 target="_blank" rel="noopener noreferrer"
 href="https://github.com/NixOS/nixos-hardware/blob/master/common/cpu/amd/raphael/igpu.nix"

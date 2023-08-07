@@ -5,7 +5,16 @@
 &lt;p>However, autofill is only triggered automatically if you have a secure connection (https) with a valid SSL certificate. Otherwise, autofill is offered, but only if you click on the corresponding input field yourself.&lt;/p>
 &lt;p>The motto seems to be: We only offer it to you automatically if it is really secure, otherwise you do it consciously on your own responsibility.&lt;/p>
 &lt;div class="alert alert-info">
-&lt;h3>Real Device &amp;amp; Simulator&lt;/h3>
+&lt;h3>
+&lt;svg
+class="icon"
+xmlns="http://www.w3.org/2000/svg"
+viewBox="0 0 384 512">
+&lt;path
+d="M272 384c9.6-31.9 29.5-59.1 49.2-86.2l0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C368 78.8 289.2 0 192 0S16 78.8 16 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4l0 0c19.8 27.1 39.7 54.4 49.2 86.2H272zM192 512c44.2 0 80-35.8 80-80V416H112v16c0 44.2 35.8 80 80 80zM112 176c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-61.9 50.1-112 112-112c8.8 0 16 7.2 16 16s-7.2 16-16 16c-44.2 0-80 35.8-80 80z" />
+&lt;/svg>
+Real Device &amp;amp; Simulator
+&lt;/h3>
 &lt;p>It works both with a real iOS device as well as with the simulator available on macOS.&lt;/p>
 &lt;/div>
 &lt;h2 id="save-login-data-on-ios">&lt;a href="#save-login-data-on-ios">Save login data on iOS&lt;/a>&lt;/h2>&lt;p>As already mentioned, the autofill can only be triggered if the login data for the matching URL has been saved. Therefore, I want like to document the creation of this data at the beginning, as we will refer to it in the process.&lt;/p>
@@ -68,7 +77,16 @@ aria-label="Homebrew localtunnel" title="Homebrew localtunnel"
 &lt;/ol>
 &lt;h3 id="local-ssl-certificate">&lt;a href="#local-ssl-certificate">Local SSL certificate&lt;/a>&lt;/h3>&lt;p>If you do not want to use a tunneling service, a local SSL certificate is another alternative.&lt;/p>
 &lt;div class="alert alert-info">
-&lt;h3>Follow along&lt;/h3>
+&lt;h3>
+&lt;svg
+class="icon"
+xmlns="http://www.w3.org/2000/svg"
+viewBox="0 0 384 512">
+&lt;path
+d="M272 384c9.6-31.9 29.5-59.1 49.2-86.2l0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C368 78.8 289.2 0 192 0S16 78.8 16 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4l0 0c19.8 27.1 39.7 54.4 49.2 86.2H272zM192 512c44.2 0 80-35.8 80-80V416H112v16c0 44.2 35.8 80 80 80zM112 176c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-61.9 50.1-112 112-112c8.8 0 16 7.2 16 16s-7.2 16-16 16c-44.2 0-80 35.8-80 80z" />
+&lt;/svg>
+Follow along
+&lt;/h3>
 &lt;p>If you want to follow the next steps directly, I&amp;rsquo;ve provided a super simple React project on &lt;a
 target="_blank" rel="noopener noreferrer"
 href="https://github.com/stffffn/ios-autofill-test"
