@@ -25,4 +25,5 @@ My very personal and highly subjective Mate Ice Tea rating (who even cares about
 {{<mate name="Mio Mio Mate Pomegranate" rating="3.5">}}
 {{<mate name="Mio Mio Mate Original" rating="3.5">}}
 {{<mate name="Mio Mio Mate Zero" rating="2.5">}}
+{{<mate name="Red Bull Organics Viva Mate" rating="3">}}
 </ul>
