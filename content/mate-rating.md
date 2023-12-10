@@ -14,6 +14,8 @@ My very personal and highly subjective Mate Ice Tea rating (who even cares about
 {{<mate name="Club Mate" rating="5">}}
 {{<mate name="Club Mate Granat" rating="3.5">}}
 {{<mate name="Club Mate Ice-T Kraftstoff" rating="3.5">}}
+{{<mate name="einskommafünfgrad Bio Eistee Mate-Pfirsich" rating="3.5">}}
+{{<mate name="Flora Power Mate" rating="4.5">}}
 {{<mate name="Fritz Mate" rating="1">}}
 {{<mate name="LaMate" rating="3">}}
 {{<mate name="LaMate Minze" rating="2">}}
@@ -26,4 +28,7 @@ My very personal and highly subjective Mate Ice Tea rating (who even cares about
 {{<mate name="Mio Mio Mate Original" rating="3.5">}}
 {{<mate name="Mio Mio Mate Zero" rating="2.5">}}
 {{<mate name="Red Bull Organics Viva Mate" rating="3">}}
+{{<mate name="Voelkel BioZisch Mate" rating="3.5">}}
+{{<mate name="Voelkel BioZisch Mate Yuzu" rating="2.5">}}
+{{<mate name="Voelkel Fairer Eistee Mate Zitrone" rating="1.5">}}
 </ul>
