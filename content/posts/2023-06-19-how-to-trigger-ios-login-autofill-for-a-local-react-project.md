@@ -14,7 +14,7 @@ tags:
 
 I once had to debug a problem for a React project that was a side effect of the automatic iOS login autofill. Triggering the iOS autofill for a locally running React project wasn't quite straightforward, so I wanted to document my findings in this blog post.
 
-## tld;dr
+## tl;dr
 
 You need an https connection with a valid SSL certificate or it won't work.
 
