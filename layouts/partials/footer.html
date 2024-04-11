@@ -3,7 +3,7 @@
   <span>
     &copy;
     {{ range first 1 $posts }}{{ .Date.Format "2006" }}{{ end }}&nbsp;&ndash;
-    {{ range last 1 $posts }}{{ .Date.Format "2006" }}{{ end }}
+    {{ time.Now.Format "2006" }}
     {{ .Site.Params.Author }}
   </span>
   <div>
